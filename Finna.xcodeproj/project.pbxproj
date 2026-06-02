@@ -1,0 +1,511 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0D03B7640CC0B65EC40E491E /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E352C6064BB169EAE8A0D0F8 /* CardView.swift */; };
+		131FDD7F344942C45B653650 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = D522CF076A958B84326D5DE5 /* Trip.swift */; };
+		191A8E86D3C9CB212846BD88 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1504739F13A82AF1F550BAC /* OnboardingView.swift */; };
+		1AE99355B2D65616D4A712CA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3840BA54218FB896C9D0BA7B /* Assets.xcassets */; };
+		415E949CE8FDF22C811D59CF /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BAF5A4BC55DD42F0BA51CE7 /* MainTabView.swift */; };
+		5A43925E2E6FF04BEC1FBD83 /* PlansView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F8CA33054A713C85330B657 /* PlansView.swift */; };
+		6ED9B5FB2957C08483E029D7 /* FinanceTrackerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A01A2127C2AEF51E19EB91A /* FinanceTrackerApp.swift */; };
+		772A2529D36727E0A4890764 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B8F6625816325B014ED0567 /* CalendarView.swift */; };
+		7AD2D27D20C0B54EA957EF32 /* Wallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335BC329D9E853E01BEFC861 /* Wallet.swift */; };
+		89A9F456699F4015A2FC94F1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFB6416E375E9AD8A537AD1E /* ContentView.swift */; };
+		9168FCC7917F530F73C8EDB0 /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EEB6D285D7E4F4CB9E7472 /* AddTransactionView.swift */; };
+		9414215CC5F306239E65EF56 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7EBEFECB09E88364C86A7 /* SettingsView.swift */; };
+		95D16E01BBBA00554EAB27C1 /* TransactionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB6DD62A926FAB54E880700 /* TransactionRowView.swift */; };
+		98A2C9C39CB94F7BAA76703E /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9C8AA7ACC8041F99E30A1D /* PrimaryButton.swift */; };
+		A2E66B5DBF51762C1E55A577 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D140B776D3A1A32729DBE5E /* StatsView.swift */; };
+		A4490D2D5DBC2337F46E4E43 /* SavingsGoal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26FBF15368BCA3886C19DD39 /* SavingsGoal.swift */; };
+		AA69A4631166F6D8B09363BF /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D20FEB769A858B745F8A1A /* AppTheme.swift */; };
+		B397C1FD4CE861A1C0069D88 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19591336237D3413D43EF838 /* Subscription.swift */; };
+		C91EB2AD05FB531B8516D9D6 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAFB3F713292460E270CE089 /* DataStore.swift */; };
+		CFABC72B5D206F7E60E735B6 /* AppCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4E6985F18C5B0AD548E0719 /* AppCategory.swift */; };
+		D7B93B89D9EA90908BC4CD8F /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80834B4FD76924A185E2234F /* Transaction.swift */; };
+		E441F7896C58F2FAB66F0A47 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C3EA5A1E9CDCA71C67D85F /* HomeView.swift */; };
+		EEECD5812A7EB807770E5394 /* FloatingAddButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF607AC3B99AC8B170C54DC0 /* FloatingAddButton.swift */; };
+		F9C7975D55E337064693F594 /* AllTransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 133E8CFF7A458D6CF788B6C9 /* AllTransactionsView.swift */; };
+		FA264FA6CFF352BE84899CAA /* RecurringRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9757172F6554BEC226C5EBCF /* RecurringRule.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0A01A2127C2AEF51E19EB91A /* FinanceTrackerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinanceTrackerApp.swift; sourceTree = "<group>"; };
+		133E8CFF7A458D6CF788B6C9 /* AllTransactionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllTransactionsView.swift; sourceTree = "<group>"; };
+		19591336237D3413D43EF838 /* Subscription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
+		26FBF15368BCA3886C19DD39 /* SavingsGoal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavingsGoal.swift; sourceTree = "<group>"; };
+		335BC329D9E853E01BEFC861 /* Wallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wallet.swift; sourceTree = "<group>"; };
+		3840BA54218FB896C9D0BA7B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5B8F6625816325B014ED0567 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		5D140B776D3A1A32729DBE5E /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		62C3EA5A1E9CDCA71C67D85F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		63F7EBEFECB09E88364C86A7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		6BAF5A4BC55DD42F0BA51CE7 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		6C6DCACF1D1A8ABDD90EDC55 /* Finna.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Finna.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		80834B4FD76924A185E2234F /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
+		9757172F6554BEC226C5EBCF /* RecurringRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecurringRule.swift; sourceTree = "<group>"; };
+		9F8CA33054A713C85330B657 /* PlansView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlansView.swift; sourceTree = "<group>"; };
+		A4E6985F18C5B0AD548E0719 /* AppCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCategory.swift; sourceTree = "<group>"; };
+		AAFB3F713292460E270CE089 /* DataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
+		B9D20FEB769A858B745F8A1A /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
+		CF607AC3B99AC8B170C54DC0 /* FloatingAddButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingAddButton.swift; sourceTree = "<group>"; };
+		CFB6416E375E9AD8A537AD1E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		D522CF076A958B84326D5DE5 /* Trip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trip.swift; sourceTree = "<group>"; };
+		DC9C8AA7ACC8041F99E30A1D /* PrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButton.swift; sourceTree = "<group>"; };
+		E352C6064BB169EAE8A0D0F8 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		ECB6DD62A926FAB54E880700 /* TransactionRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionRowView.swift; sourceTree = "<group>"; };
+		F1504739F13A82AF1F550BAC /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		F4EEB6D285D7E4F4CB9E7472 /* AddTransactionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddTransactionView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		015E7EA295F4EB44E956C1D8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				759430AC2E7618984B2B63F8 /* AllTransactions */,
+				B9604BA76AB691410453DC61 /* Calendar */,
+				3BDE0DD132430025FE53CA59 /* Home */,
+				E442041B48FC871F229DA1D6 /* Onboarding */,
+				89F9359EE5446D7E10CF04B7 /* Plans */,
+				B0F20F8ADD0BC2C10E78EFD3 /* Settings */,
+				A4598569CEFA255404196AD4 /* Stats */,
+				E4B951F7DF372C4F079FCF98 /* Transactions */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3BDE0DD132430025FE53CA59 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				62C3EA5A1E9CDCA71C67D85F /* HomeView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		625117C229ECBC6D449D7E94 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				AAFB3F713292460E270CE089 /* DataStore.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		6EA0F7A0C517B6378D1BDACA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6C6DCACF1D1A8ABDD90EDC55 /* Finna.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		759430AC2E7618984B2B63F8 /* AllTransactions */ = {
+			isa = PBXGroup;
+			children = (
+				133E8CFF7A458D6CF788B6C9 /* AllTransactionsView.swift */,
+			);
+			path = AllTransactions;
+			sourceTree = "<group>";
+		};
+		89F9359EE5446D7E10CF04B7 /* Plans */ = {
+			isa = PBXGroup;
+			children = (
+				9F8CA33054A713C85330B657 /* PlansView.swift */,
+			);
+			path = Plans;
+			sourceTree = "<group>";
+		};
+		91602930E5C9302D64BDEBD0 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				E352C6064BB169EAE8A0D0F8 /* CardView.swift */,
+				CF607AC3B99AC8B170C54DC0 /* FloatingAddButton.swift */,
+				DC9C8AA7ACC8041F99E30A1D /* PrimaryButton.swift */,
+				ECB6DD62A926FAB54E880700 /* TransactionRowView.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		9D1A826840E8AFF826FD6955 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				B9D20FEB769A858B745F8A1A /* AppTheme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		A4598569CEFA255404196AD4 /* Stats */ = {
+			isa = PBXGroup;
+			children = (
+				5D140B776D3A1A32729DBE5E /* StatsView.swift */,
+			);
+			path = Stats;
+			sourceTree = "<group>";
+		};
+		A6DAE6D2F700E56AEB4CE862 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A4E6985F18C5B0AD548E0719 /* AppCategory.swift */,
+				9757172F6554BEC226C5EBCF /* RecurringRule.swift */,
+				26FBF15368BCA3886C19DD39 /* SavingsGoal.swift */,
+				19591336237D3413D43EF838 /* Subscription.swift */,
+				80834B4FD76924A185E2234F /* Transaction.swift */,
+				D522CF076A958B84326D5DE5 /* Trip.swift */,
+				335BC329D9E853E01BEFC861 /* Wallet.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B0F20F8ADD0BC2C10E78EFD3 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				63F7EBEFECB09E88364C86A7 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		B9604BA76AB691410453DC61 /* Calendar */ = {
+			isa = PBXGroup;
+			children = (
+				5B8F6625816325B014ED0567 /* CalendarView.swift */,
+			);
+			path = Calendar;
+			sourceTree = "<group>";
+		};
+		CC244D276E1E004EAB4D4ED1 = {
+			isa = PBXGroup;
+			children = (
+				E1FA2D4AE7B48EDE688E12F2 /* FinanceTracker */,
+				6EA0F7A0C517B6378D1BDACA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E1FA2D4AE7B48EDE688E12F2 /* FinanceTracker */ = {
+			isa = PBXGroup;
+			children = (
+				3840BA54218FB896C9D0BA7B /* Assets.xcassets */,
+				CFB6416E375E9AD8A537AD1E /* ContentView.swift */,
+				0A01A2127C2AEF51E19EB91A /* FinanceTrackerApp.swift */,
+				6BAF5A4BC55DD42F0BA51CE7 /* MainTabView.swift */,
+				91602930E5C9302D64BDEBD0 /* Components */,
+				A6DAE6D2F700E56AEB4CE862 /* Models */,
+				625117C229ECBC6D449D7E94 /* Persistence */,
+				9D1A826840E8AFF826FD6955 /* Theme */,
+				015E7EA295F4EB44E956C1D8 /* Views */,
+			);
+			path = FinanceTracker;
+			sourceTree = "<group>";
+		};
+		E442041B48FC871F229DA1D6 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				F1504739F13A82AF1F550BAC /* OnboardingView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		E4B951F7DF372C4F079FCF98 /* Transactions */ = {
+			isa = PBXGroup;
+			children = (
+				F4EEB6D285D7E4F4CB9E7472 /* AddTransactionView.swift */,
+			);
+			path = Transactions;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		81D7567DA4EA005D68C20FDC /* Finna */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A3BA84745721ADDEA064CEFD /* Build configuration list for PBXNativeTarget "Finna" */;
+			buildPhases = (
+				76ADEA9B94761C4FC5C5F7BB /* Sources */,
+				FAAE04855690302D78855D4A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Finna;
+			packageProductDependencies = (
+			);
+			productName = Finna;
+			productReference = 6C6DCACF1D1A8ABDD90EDC55 /* Finna.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EFCFAE970DD5D3AD74DFA127 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = CF7BDED7E234EA2D458EA253 /* Build configuration list for PBXProject "Finna" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CC244D276E1E004EAB4D4ED1;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 6EA0F7A0C517B6378D1BDACA /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				81D7567DA4EA005D68C20FDC /* Finna */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FAAE04855690302D78855D4A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1AE99355B2D65616D4A712CA /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		76ADEA9B94761C4FC5C5F7BB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9168FCC7917F530F73C8EDB0 /* AddTransactionView.swift in Sources */,
+				F9C7975D55E337064693F594 /* AllTransactionsView.swift in Sources */,
+				CFABC72B5D206F7E60E735B6 /* AppCategory.swift in Sources */,
+				AA69A4631166F6D8B09363BF /* AppTheme.swift in Sources */,
+				772A2529D36727E0A4890764 /* CalendarView.swift in Sources */,
+				0D03B7640CC0B65EC40E491E /* CardView.swift in Sources */,
+				89A9F456699F4015A2FC94F1 /* ContentView.swift in Sources */,
+				C91EB2AD05FB531B8516D9D6 /* DataStore.swift in Sources */,
+				6ED9B5FB2957C08483E029D7 /* FinanceTrackerApp.swift in Sources */,
+				EEECD5812A7EB807770E5394 /* FloatingAddButton.swift in Sources */,
+				E441F7896C58F2FAB66F0A47 /* HomeView.swift in Sources */,
+				415E949CE8FDF22C811D59CF /* MainTabView.swift in Sources */,
+				191A8E86D3C9CB212846BD88 /* OnboardingView.swift in Sources */,
+				5A43925E2E6FF04BEC1FBD83 /* PlansView.swift in Sources */,
+				98A2C9C39CB94F7BAA76703E /* PrimaryButton.swift in Sources */,
+				FA264FA6CFF352BE84899CAA /* RecurringRule.swift in Sources */,
+				A4490D2D5DBC2337F46E4E43 /* SavingsGoal.swift in Sources */,
+				9414215CC5F306239E65EF56 /* SettingsView.swift in Sources */,
+				A2E66B5DBF51762C1E55A577 /* StatsView.swift in Sources */,
+				B397C1FD4CE861A1C0069D88 /* Subscription.swift in Sources */,
+				D7B93B89D9EA90908BC4CD8F /* Transaction.swift in Sources */,
+				95D16E01BBBA00554EAB27C1 /* TransactionRowView.swift in Sources */,
+				131FDD7F344942C45B653650 /* Trip.swift in Sources */,
+				7AD2D27D20C0B54EA957EF32 /* Wallet.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A6A6D14FB74C43EB65C83C75 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_LANGUAGE = en;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		B8E4DF7E11EA9D8828C6E201 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.danielsanchez.finna;
+				PRODUCT_NAME = Finna;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		E98186BA68150526E74F663C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.danielsanchez.finna;
+				PRODUCT_NAME = Finna;
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		F32A8C84A4664FB0A5BF9FC7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_LANGUAGE = en;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A3BA84745721ADDEA064CEFD /* Build configuration list for PBXNativeTarget "Finna" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8E4DF7E11EA9D8828C6E201 /* Debug */,
+				E98186BA68150526E74F663C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		CF7BDED7E234EA2D458EA253 /* Build configuration list for PBXProject "Finna" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F32A8C84A4664FB0A5BF9FC7 /* Debug */,
+				A6A6D14FB74C43EB65C83C75 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EFCFAE970DD5D3AD74DFA127 /* Project object */;
+}
