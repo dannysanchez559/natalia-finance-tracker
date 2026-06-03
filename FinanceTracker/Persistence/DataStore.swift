@@ -10,6 +10,17 @@ import Foundation
 import SwiftData
 import SwiftUI
 
+/// A saved one-tap shortcut. Tapping it creates a transaction with today's
+/// date and these fields. Persisted (max 6) to UserDefaults as JSON.
+struct QuickAction: Identifiable, Codable, Hashable {
+    var id: String = UUID().uuidString
+    var type: String
+    var amount: Double
+    var categoryId: String
+    var walletId: String
+    var note: String
+}
+
 @Observable
 final class DataStore {
 
@@ -40,6 +51,8 @@ final class DataStore {
         static let isDarkMode = "isDarkMode"
         static let hasOnboarded = "hasOnboarded"
         static let activeTripId = "activeTripId"
+        static let budgetLimits = "budgetLimits"
+        static let quickActions = "quickActions"
     }
 
     var currencyCode: String {
@@ -60,6 +73,28 @@ final class DataStore {
     var activeTripId: String? {
         get { UserDefaults.standard.string(forKey: Keys.activeTripId) }
         set { UserDefaults.standard.set(newValue, forKey: Keys.activeTripId) }
+    }
+
+    /// Per-category monthly budget limits, keyed by `categoryId`. Set in Stats.
+    var budgetLimits: [String: Double] {
+        get { UserDefaults.standard.dictionary(forKey: Keys.budgetLimits) as? [String: Double] ?? [:] }
+        set { UserDefaults.standard.set(newValue, forKey: Keys.budgetLimits) }
+    }
+
+    /// Saved quick-add shortcuts (max 6). Stored as JSON.
+    var quickActions: [QuickAction] {
+        get {
+            guard let data = UserDefaults.standard.data(forKey: Keys.quickActions),
+                  let decoded = try? JSONDecoder().decode([QuickAction].self, from: data)
+            else { return [] }
+            return decoded
+        }
+        set {
+            let capped = Array(newValue.prefix(6))
+            if let data = try? JSONEncoder().encode(capped) {
+                UserDefaults.standard.set(data, forKey: Keys.quickActions)
+            }
+        }
     }
 
     // MARK: - Currency Catalog

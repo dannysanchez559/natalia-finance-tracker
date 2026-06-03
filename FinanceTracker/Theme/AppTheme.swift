@@ -59,6 +59,10 @@ enum AppTheme {
         static let textPrimary = Color(light: "#1A1410", dark: "#F2EDE7")
         static let textMuted   = Color(light: "#8A7A6E", dark: "#A89A8E")
         static let border      = Color(light: "#EAE4DC", dark: "#3A322C")
+        // Accent used for the active-trip banner.
+        static let teal        = Color(light: "#3AA39B", dark: "#5FBEB6")
+        // Budget alert at 80–99% of limit (100%+ uses `expense`).
+        static let warning     = Color(light: "#D08A2E", dark: "#E0A24E")
     }
 
     // MARK: Corner Radius
