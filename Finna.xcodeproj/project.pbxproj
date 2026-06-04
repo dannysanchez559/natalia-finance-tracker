@@ -21,6 +21,7 @@
 		8AF23617AD962B823D67C473 /* BudgetManagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3F7770C584A63D0C5E2D49 /* BudgetManagerView.swift */; };
 		9168FCC7917F530F73C8EDB0 /* AddTransactionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EEB6D285D7E4F4CB9E7472 /* AddTransactionView.swift */; };
 		9414215CC5F306239E65EF56 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63F7EBEFECB09E88364C86A7 /* SettingsView.swift */; };
+		6B792D0034C924F1589E4CC3 /* CurrencyPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A82BED366C8C156DD9AB3039 /* CurrencyPickerView.swift */; };
 		95D16E01BBBA00554EAB27C1 /* TransactionRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECB6DD62A926FAB54E880700 /* TransactionRowView.swift */; };
 		98A2C9C39CB94F7BAA76703E /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9C8AA7ACC8041F99E30A1D /* PrimaryButton.swift */; };
 		A2E66B5DBF51762C1E55A577 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D140B776D3A1A32729DBE5E /* StatsView.swift */; };
@@ -51,6 +52,7 @@
 		61778FBBE67EBADF023BF381 /* TransactionGrouping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionGrouping.swift; sourceTree = "<group>"; };
 		62C3EA5A1E9CDCA71C67D85F /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		63F7EBEFECB09E88364C86A7 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A82BED366C8C156DD9AB3039 /* CurrencyPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyPickerView.swift; sourceTree = "<group>"; };
 		6BAF5A4BC55DD42F0BA51CE7 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
 		6C6DCACF1D1A8ABDD90EDC55 /* Finna.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Finna.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		80834B4FD76924A185E2234F /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
@@ -180,6 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				63F7EBEFECB09E88364C86A7 /* SettingsView.swift */,
+				A82BED366C8C156DD9AB3039 /* CurrencyPickerView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -320,6 +323,7 @@
 				A4490D2D5DBC2337F46E4E43 /* SavingsGoal.swift in Sources */,
 				8316AB1B0BD1A5A522374F31 /* SearchView.swift in Sources */,
 				9414215CC5F306239E65EF56 /* SettingsView.swift in Sources */,
+				6B792D0034C924F1589E4CC3 /* CurrencyPickerView.swift in Sources */,
 				A2E66B5DBF51762C1E55A577 /* StatsView.swift in Sources */,
 				B397C1FD4CE861A1C0069D88 /* Subscription.swift in Sources */,
 				D7B93B89D9EA90908BC4CD8F /* Transaction.swift in Sources */,
