@@ -53,6 +53,7 @@ final class DataStore {
         static let activeTripId = "activeTripId"
         static let budgetLimits = "budgetLimits"
         static let quickActions = "quickActions"
+        static let recurringProcessorV1 = "recurringProcessorV1"
     }
 
     var currencyCode: String {
@@ -172,10 +173,67 @@ final class DataStore {
 
     // MARK: - Recurring Rules
 
-    /// Generates any missed transactions for each recurring rule since its lastRun.
+    /// Generates any missed transactions for each recurring rule since its
+    /// `lastRun`. For every rule, intervals are walked forward from `startDate`
+    /// (n = 1, 2, 3 …) until the computed date passes `Date.now`. Any interval
+    /// date that falls after `lastRun` and on or before now produces a new
+    /// `Transaction` tagged " (auto)", and `lastRun` is advanced to the most
+    /// recent processed date. Walking from `startDate` and gating on `lastRun`
+    /// means transactions generated on a previous launch are never duplicated.
     func processRecurringRules(context: ModelContext) {
-        // TODO: Phase 4 — iterate RecurringRule records, create missed transactions
-        // ("(auto)" appended to note) for each elapsed interval, then update lastRun.
+        let rules = (try? context.fetch(FetchDescriptor<RecurringRule>())) ?? []
+        // Guard: nothing to do when there are no rules.
+        guard !rules.isEmpty else { return }
+
+        let now = Date.now
+        let calendar = Calendar.current
+        let code = currencyCode
+
+        for rule in rules {
+            // Map the rule's frequency to a calendar component to step by.
+            let component: Calendar.Component
+            switch rule.frequency {
+            case "weekly":  component = .weekOfYear
+            case "monthly": component = .month
+            case "yearly":  component = .year
+            default: continue
+            }
+
+            var n = 1
+            var mostRecentProcessed = rule.lastRun
+
+            // Walk intervals forward until we step past now.
+            while let intervalDate = calendar.date(byAdding: component, value: n, to: rule.startDate),
+                  intervalDate <= now {
+                // Only generate for intervals not already covered by lastRun.
+                if intervalDate > rule.lastRun {
+                    let transaction = Transaction(
+                        type: rule.type,
+                        amount: rule.amount,
+                        currencyCode: code,
+                        categoryId: rule.categoryId,
+                        walletId: rule.walletId,
+                        note: rule.note + " (auto)",
+                        tags: [],
+                        tripId: nil,
+                        date: intervalDate,
+                        fromRecurringId: rule.id
+                    )
+                    context.insert(transaction)
+                    mostRecentProcessed = intervalDate
+                }
+                n += 1
+            }
+
+            rule.lastRun = mostRecentProcessed
+        }
+
+        try? context.save()
+
+        // One-time migration marker. Once set, all rules have been processed up
+        // to their lastRun at least once, so subsequent launches resume from the
+        // advanced lastRun values rather than re-scanning historical intervals.
+        UserDefaults.standard.set(true, forKey: Keys.recurringProcessorV1)
     }
 
     // MARK: - Formatting
