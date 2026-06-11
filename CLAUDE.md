@@ -153,21 +153,23 @@ All models use `@Model` from SwiftData.
 
 All colors must come from `AppTheme.swift`. Never hardcode color hex values elsewhere in the codebase.
 
-**Design direction:** Slate — cool periwinkle blue, clean and gender-neutral. Simple, approachable, and distinctive from typical finance app aesthetics.
+**Design direction:** Ofspace-inspired — bold hero card, floating white surface cards, soft blue-purple palette, clean sans-serif hierarchy.
 
 **Light mode (primary):**
-- Background: `#F5F6FA`
+- Background: `#F0F2FA`
 - Surface (cards): `#FFFFFF`
-- Accent: `#3D52A0`
-- Accent alt: `#2A3A7C`
-- Income: `#2E6E8E`
-- Expense: `#A03D3D`
+- Accent: `#4A5DB0`
+- Accent alt: `#3A4D9F`
+- Income: `#2E8E6E`
+- Expense: `#B85450`
 - Danger: `#C0392B`
 - Text primary: `#1A1F3C`
 - Text muted: `#6470A0`
 - Text dim: `#9AA0C4`
 - Border: `#E2E5F0`
-- Border alt: `#C8CEDE`
+- Border alt: `#D0D4EC`
+- Hero card: `#4A5DB0` (balance card background)
+- Hero card alt: `#3A4D9F` (inner elements on the hero card)
 
 **Dark mode:**
 - Background: `#0E0F1A`

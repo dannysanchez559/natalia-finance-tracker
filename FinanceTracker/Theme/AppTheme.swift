@@ -51,14 +51,21 @@ enum AppTheme {
     // MARK: Colors
     // Light values from CLAUDE.md; dark values are the warm-brown adaptation per PRD §5.1.
     enum Colors {
-        static let background  = Color(light: "#F5F6FA", dark: "#0E0F1A")
+        static let background  = Color(light: "#F0F2FA", dark: "#0E0F1A")
         static let surface     = Color(light: "#FFFFFF", dark: "#161828")
-        static let accent      = Color(light: "#3D52A0", dark: "#7B8FD4")
-        static let income      = Color(light: "#2E6E8E", dark: "#5AAAC8")
-        static let expense     = Color(light: "#A03D3D", dark: "#D47878")
+        static let accent      = Color(light: "#4A5DB0", dark: "#7B8FD4")
+        static let accentAlt   = Color(light: "#3A4D9F", dark: "#6A7EC4")
+        static let income      = Color(light: "#2E8E6E", dark: "#5AAAC8")
+        static let expense     = Color(light: "#B85450", dark: "#D47878")
+        static let danger      = Color(light: "#C0392B", dark: "#E0564A")
         static let textPrimary = Color(light: "#1A1F3C", dark: "#EEEEF8")
         static let textMuted   = Color(light: "#6470A0", dark: "#8888AA")
+        static let textDim     = Color(light: "#9AA0C4", dark: "#6A6A88")
         static let border      = Color(light: "#E2E5F0", dark: "#2A2D45")
+        static let borderAlt   = Color(light: "#D0D4EC", dark: "#363A58")
+        // Hero balance card — bold brand blue-purple with white text in both modes.
+        static let heroCard    = Color(light: "#4A5DB0", dark: "#4A5DB0")
+        static let heroCardAlt = Color(light: "#3A4D9F", dark: "#3A4D9F")
         // Accent used for the active-trip banner.
         static let teal        = Color(light: "#2A7A9B", dark: "#5FBEB6")
         // Budget alert at 80–99% of limit (100%+ uses `expense`).
@@ -124,15 +131,13 @@ struct CardStyle: ViewModifier {
             .padding(padding)
             .background(AppTheme.Colors.surface)
             .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.large, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: AppTheme.Radius.large, style: .continuous)
-                    .stroke(AppTheme.Colors.border, lineWidth: 1)
-            )
+            // Soft floating shadow (Ofspace-inspired) — no border.
+            .shadow(color: .black.opacity(0.06), radius: 12, x: 0, y: 4)
     }
 }
 
 extension View {
-    /// Applies the standard surface card treatment (background, radius, border).
+    /// Applies the standard surface card treatment (background, radius, soft shadow).
     func cardStyle(padding: CGFloat = AppTheme.Spacing.md) -> some View {
         modifier(CardStyle(padding: padding))
     }

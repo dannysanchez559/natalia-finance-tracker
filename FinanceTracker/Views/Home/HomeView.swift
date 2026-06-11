@@ -2,11 +2,11 @@
 //  HomeView.swift
 //  Finna
 //
-//  Dashboard — the most visible screen. Header with month/year + settings,
-//  active-trip banner, balance card (this month, currency selector,
-//  month-over-month change, income/expense split), wallets row (all-time
-//  balances), budget alert banners, recent transactions (last 3 days), and
-//  a quick-add strip. All data is read from SwiftData and derived in place.
+//  Dashboard — the most visible screen. Ofspace-inspired layout: greeting
+//  header with avatar, a bold hero balance card (this month, income/expense
+//  split), a horizontal Accounts strip (all-time wallet balances), a budgets
+//  card with progress bars, and recent transactions (last 3 days). All data is
+//  read from SwiftData and derived in place.
 //
 
 import SwiftUI
@@ -23,6 +23,9 @@ struct HomeView: View {
 
     @State private var editingTransaction: Transaction?
     @State private var showingSettings = false
+    @State private var showingBudgetManager = false
+    @State private var showingSearch = false
+    @State private var showingAllTransactions = false
 
     // UserDefaults-backed settings are not @Observable, so mirror them in
     // local state (loaded in onAppear, written through on mutation) to keep
@@ -48,7 +51,7 @@ struct HomeView: View {
                     if let trip = activeTrip { tripBanner(trip) }
                     balanceCard
                     walletsSection
-                    if !budgetAlerts.isEmpty { budgetSection }
+                    budgetSection
                     recentSection
                     if !quickActions.isEmpty { quickAddSection }
                 }
@@ -66,6 +69,15 @@ struct HomeView: View {
             .sheet(isPresented: $showingSettings) {
                 SettingsView()
             }
+            .sheet(isPresented: $showingBudgetManager) {
+                BudgetManagerView()
+            }
+            .sheet(isPresented: $showingSearch) {
+                SearchView()
+            }
+            .sheet(isPresented: $showingAllTransactions) {
+                AllTransactionsView()
+            }
             .onAppear(perform: loadSettings)
         }
     }
@@ -73,18 +85,36 @@ struct HomeView: View {
     // MARK: - Header
 
     private var header: some View {
-        HStack {
-            Text(monthTitle)
-                .font(.appSerif(28, weight: .semibold))
-                .foregroundStyle(AppTheme.Colors.textPrimary)
-            Spacer()
-            Button {
-                showingSettings = true
-            } label: {
-                Image(systemName: "gearshape")
-                    .font(.system(size: 20, weight: .medium))
+        HStack(alignment: .center) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Good morning")
+                    .font(.appSans(AppTheme.Typography.fontCaption, weight: .semibold))
                     .foregroundStyle(AppTheme.Colors.textMuted)
+                Text(monthTitle)
+                    .font(.appSans(AppTheme.Typography.fontTitle, weight: .semibold))
+                    .foregroundStyle(AppTheme.Colors.textPrimary)
             }
+            Spacer()
+            HStack(spacing: AppTheme.Spacing.md) {
+                Button {
+                    showingSearch = true
+                } label: {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 18, weight: .medium))
+                        .foregroundStyle(AppTheme.Colors.textMuted)
+                }
+                Button {
+                    showingSettings = true
+                } label: {
+                    Text("F")
+                        .font(.appSans(16, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(width: 34, height: 34)
+                        .background(AppTheme.Colors.accent)
+                        .clipShape(Circle())
+                }
+            }
+            .buttonStyle(.plain)
         }
     }
 
@@ -126,7 +156,7 @@ struct HomeView: View {
         .buttonStyle(.plain)
     }
 
-    // MARK: - Balance Card
+    // MARK: - Hero Balance Card
 
     private var monthTransactions: [Transaction] { transactions.inMonth() }
 
@@ -152,32 +182,50 @@ struct HomeView: View {
 
         return VStack(alignment: .leading, spacing: AppTheme.Spacing.md) {
             HStack {
-                Text("This Month")
-                    .font(.appSans(12, weight: .semibold))
-                    .foregroundStyle(AppTheme.Colors.textMuted)
+                Text("Working balance")
+                    .font(.appSans(AppTheme.Typography.fontCaption, weight: .semibold))
+                    .foregroundStyle(.white.opacity(0.7))
                 Spacer()
                 currencyButton
             }
 
-            Text(store.formatAmount(net))
-                .font(.appSerif(40, weight: .semibold))
-                .foregroundStyle(net >= 0 ? AppTheme.Colors.income : AppTheme.Colors.expense)
-                .contentTransition(.numericText())
-                .animation(.easeOut(duration: 0.3), value: net)
-
-            if let change = spendingChange {
-                spendingChangeRow(change)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(store.formatAmount(net))
+                    .font(.appSans(AppTheme.Typography.fontBalance, weight: .thin))
+                    .tracking(AppTheme.Typography.trackingTight)
+                    .foregroundStyle(.white)
+                    .contentTransition(.numericText())
+                    .animation(.easeOut(duration: 0.3), value: net)
+                Text(monthTitle)
+                    .font(.appSans(AppTheme.Typography.fontCaption, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.6))
             }
 
-            Divider()
-
-            HStack(spacing: AppTheme.Spacing.lg) {
-                totalColumn(title: "Income", amount: income, color: AppTheme.Colors.income)
-                totalColumn(title: "Expenses", amount: expense, color: AppTheme.Colors.expense)
+            HStack(spacing: AppTheme.Spacing.sm) {
+                heroInnerCard(title: "Income", amount: income)
+                heroInnerCard(title: "Expenses", amount: expense)
             }
         }
+        .padding(AppTheme.Spacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .cardStyle()
+        .background(AppTheme.Colors.heroCard)
+        .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.large, style: .continuous))
+        .shadow(color: AppTheme.Colors.heroCard.opacity(0.35), radius: 16, x: 0, y: 8)
+    }
+
+    private func heroInnerCard(title: String, amount: Double) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title)
+                .font(.appSans(AppTheme.Typography.fontCaption, weight: .medium))
+                .foregroundStyle(.white.opacity(0.7))
+            Text(store.formatAmount(amount))
+                .font(.appSans(AppTheme.Typography.fontCardNumber, weight: .semibold))
+                .foregroundStyle(.white)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(10)
+        .background(Color.white.opacity(0.15))
+        .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.medium, style: .continuous))
     }
 
     private var currencyButton: some View {
@@ -188,46 +236,24 @@ struct HomeView: View {
                 Image(systemName: "arrow.triangle.2.circlepath")
                     .font(.system(size: 11, weight: .semibold))
             }
-            .foregroundStyle(AppTheme.Colors.accent)
+            .foregroundStyle(.white)
             .padding(.horizontal, AppTheme.Spacing.sm)
             .padding(.vertical, 5)
-            .background(AppTheme.Colors.accent.opacity(0.12))
+            .background(Color.white.opacity(0.15))
             .clipShape(Capsule())
         }
         .buttonStyle(.plain)
     }
 
-    private func spendingChangeRow(_ change: (percent: Double, isUp: Bool)) -> some View {
-        HStack(spacing: 4) {
-            Image(systemName: change.isUp ? "arrow.up.right" : "arrow.down.right")
-                .font(.system(size: 11, weight: .bold))
-            Text(String(format: "%.0f%% vs last month", change.percent))
-                .font(.appSans(13, weight: .medium))
-        }
-        .foregroundStyle(change.isUp ? AppTheme.Colors.expense : AppTheme.Colors.income)
-    }
-
-    private func totalColumn(title: String, amount: Double, color: Color) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(title)
-                .font(.appSans(12))
-                .foregroundStyle(AppTheme.Colors.textMuted)
-            Text(store.formatAmount(amount))
-                .font(.appSans(17, weight: .semibold))
-                .foregroundStyle(color)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-    }
-
-    // MARK: - Wallets
+    // MARK: - Accounts
 
     private var walletsSection: some View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
-            sectionHeader("Wallets") {
+            sectionHeader("Accounts") {
                 Button("Edit") {
                     // TODO: Phase 4 — present wallet management sheet.
                 }
-                .font(.appSans(13, weight: .semibold))
+                .font(.appSans(AppTheme.Typography.fontLabel, weight: .medium))
                 .foregroundStyle(AppTheme.Colors.accent)
             }
 
@@ -237,7 +263,8 @@ struct HomeView: View {
                         walletCard(wallet)
                     }
                 }
-                .padding(.horizontal, 1) // keeps the stroke from clipping
+                .padding(.horizontal, 2) // keeps the shadow from clipping
+                .padding(.vertical, 4)
             }
         }
     }
@@ -247,86 +274,125 @@ struct HomeView: View {
         return Button {
             // TODO: Phase 4 — present edit/delete sheet for this wallet.
         } label: {
-            VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
-                Text(wallet.emoji)
-                    .font(.system(size: 22))
-                Text(wallet.name)
-                    .font(.appSans(13, weight: .medium))
-                    .foregroundStyle(AppTheme.Colors.textMuted)
-                Text(store.formatAmount(balance))
-                    .font(.appSerif(18, weight: .semibold))
-                    .foregroundStyle(AppTheme.Colors.textPrimary)
-            }
-            .frame(width: 130, alignment: .leading)
-            .cardStyle()
-            .overlay(alignment: .top) {
+            VStack(alignment: .leading, spacing: 0) {
+                // Full-width color bar; top corners are rounded by the outer clip.
                 Rectangle()
                     .fill(Color(hex: wallet.colorHex))
                     .frame(height: 3)
-                    .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.large, style: .continuous))
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(wallet.emoji)
+                        .font(.system(size: 20))
+                    Text(wallet.name)
+                        .font(.appSans(AppTheme.Typography.fontCaption, weight: .medium))
+                        .foregroundStyle(AppTheme.Colors.textMuted)
+                        .lineLimit(1)
+                    Text(store.formatAmount(balance))
+                        .font(.appSans(AppTheme.Typography.fontBody, weight: .semibold))
+                        .foregroundStyle(AppTheme.Colors.textPrimary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                }
+                .padding(10)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .frame(width: 100)
+            .background(AppTheme.Colors.surface)
+            .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.medium, style: .continuous))
+            .shadow(color: .black.opacity(0.06), radius: 12, x: 0, y: 4)
         }
         .buttonStyle(.plain)
     }
 
-    // MARK: - Budget Alerts
+    // MARK: - Budgets
 
-    /// A category at 80%+ of its monthly limit. Orange 80–99%, red 100%+.
-    private struct BudgetAlert: Identifiable {
+    /// An expense category with a monthly limit set, plus its month-to-date spend.
+    private struct BudgetItem: Identifiable {
         let category: AppCategory
         let spent: Double
         let limit: Double
         var id: String { category.id }
         var ratio: Double { limit > 0 ? spent / limit : 0 }
-        var isOver: Bool { ratio >= 1 }
     }
 
-    private var budgetAlerts: [BudgetAlert] {
+    private var budgetItems: [BudgetItem] {
         categories
             .filter { $0.type == "expense" }
-            .compactMap { category -> BudgetAlert? in
+            .compactMap { category -> BudgetItem? in
                 guard let limit = budgetLimits[category.id], limit > 0 else { return nil }
                 let spent = monthTransactions
                     .filter { $0.categoryId == category.id && $0.type == "expense" }
                     .reduce(0) { $0 + $1.amount }
-                guard spent >= limit * 0.8 else { return nil }
-                return BudgetAlert(category: category, spent: spent, limit: limit)
+                return BudgetItem(category: category, spent: spent, limit: limit)
             }
     }
 
     private var budgetSection: some View {
-        VStack(spacing: AppTheme.Spacing.sm) {
-            ForEach(budgetAlerts) { alert in
-                budgetBanner(alert)
+        VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
+            sectionHeader("Your budgets") {
+                Button("Manage") {
+                    showingBudgetManager = true
+                }
+                .font(.appSans(AppTheme.Typography.fontLabel, weight: .medium))
+                .foregroundStyle(AppTheme.Colors.accent)
             }
+
+            budgetCard
         }
     }
 
-    private func budgetBanner(_ alert: BudgetAlert) -> some View {
-        let color = alert.isOver ? AppTheme.Colors.expense : AppTheme.Colors.warning
-        return HStack(spacing: AppTheme.Spacing.sm) {
-            Text(alert.category.emoji)
-                .font(.system(size: 18))
-            VStack(alignment: .leading, spacing: 1) {
-                Text(alert.category.label)
-                    .font(.appSans(14, weight: .semibold))
+    private var budgetCard: some View {
+        VStack(spacing: 0) {
+            if budgetItems.isEmpty {
+                Text("Tap Manage to set spending limits")
+                    .font(.appSans(AppTheme.Typography.fontLabel, weight: .medium))
+                    .foregroundStyle(AppTheme.Colors.textMuted)
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.vertical, AppTheme.Spacing.sm)
+            } else {
+                ForEach(Array(budgetItems.enumerated()), id: \.element.id) { index, item in
+                    budgetRow(item)
+                    if index < budgetItems.count - 1 {
+                        Divider()
+                    }
+                }
+            }
+        }
+        .cardStyle()
+    }
+
+    private func budgetRow(_ item: BudgetItem) -> some View {
+        let fillColor: Color = {
+            if item.ratio >= 1 { return AppTheme.Colors.expense }
+            if item.ratio >= 0.8 { return Color(hex: "#E0924A") }
+            return AppTheme.Colors.accent
+        }()
+
+        return VStack(spacing: AppTheme.Spacing.sm) {
+            HStack(spacing: AppTheme.Spacing.sm) {
+                Text(item.category.emoji)
+                    .font(.system(size: 18))
+                Text(item.category.label)
+                    .font(.appSans(AppTheme.Typography.fontBody, weight: .medium))
                     .foregroundStyle(AppTheme.Colors.textPrimary)
-                Text("\(store.formatAmount(alert.spent)) of \(store.formatAmount(alert.limit))")
-                    .font(.appSans(12))
+                Spacer()
+                Text("\(store.formatAmount(item.spent)) / \(store.formatAmount(item.limit))")
+                    .font(.appSans(AppTheme.Typography.fontLabel, weight: .medium))
                     .foregroundStyle(AppTheme.Colors.textMuted)
             }
-            Spacer()
-            Text(String(format: "%.0f%%", alert.ratio * 100))
-                .font(.appSans(15, weight: .bold))
-                .foregroundStyle(color)
+
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(AppTheme.Colors.borderAlt)
+                    Capsule()
+                        .fill(fillColor)
+                        .frame(width: geo.size.width * min(item.ratio, 1))
+                }
+            }
+            .frame(height: 5)
         }
-        .padding(AppTheme.Spacing.md)
-        .background(color.opacity(0.12))
-        .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.medium, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: AppTheme.Radius.medium, style: .continuous)
-                .stroke(color.opacity(0.4), lineWidth: 1)
-        )
+        .padding(.vertical, AppTheme.Spacing.sm)
     }
 
     // MARK: - Recent Transactions
@@ -341,7 +407,13 @@ struct HomeView: View {
 
     private var recentSection: some View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
-            sectionHeader("Recent") { EmptyView() }
+            sectionHeader("Recent") {
+                Button("See all") {
+                    showingAllTransactions = true
+                }
+                .font(.appSans(AppTheme.Typography.fontLabel, weight: .medium))
+                .foregroundStyle(AppTheme.Colors.accent)
+            }
 
             if recentGroups.isEmpty {
                 emptyState
@@ -455,7 +527,7 @@ struct HomeView: View {
         .padding(.vertical, AppTheme.Spacing.sm)
         .background(AppTheme.Colors.surface)
         .clipShape(Capsule())
-        .overlay(Capsule().stroke(AppTheme.Colors.border, lineWidth: 1))
+        .shadow(color: .black.opacity(0.06), radius: 12, x: 0, y: 4)
     }
 
     // MARK: - Section Header Helper
@@ -466,8 +538,8 @@ struct HomeView: View {
     ) -> some View {
         HStack {
             Text(title)
-                .font(.appSans(12, weight: .semibold))
-                .foregroundStyle(AppTheme.Colors.textMuted)
+                .font(.appSans(AppTheme.Typography.fontBody, weight: .semibold))
+                .foregroundStyle(AppTheme.Colors.textPrimary)
             Spacer()
             trailing()
         }
