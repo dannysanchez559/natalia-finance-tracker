@@ -57,7 +57,28 @@ struct IconMap {
         return order[i]
     }
 
+    /// Stable pastel for a category. The seed categories have no stored sort
+    /// order, so we derive a fixed index from their canonical key ordering —
+    /// each default category always gets the same tint. Custom categories fall
+    /// back to a stable (launch-independent) hash of the id.
+    static func pastel(forCategory id: String) -> PastelStyle {
+        pastel(forIndex: categoryIndex(id))
+    }
+
     // MARK: - Helpers
+
+    /// Canonical ordering of the default seed categories, used to assign a
+    /// deterministic pastel index per category.
+    private static func categoryIndex(_ id: String) -> Int {
+        let order = ["food", "transport", "home", "fun", "health", "shop",
+                     "travel", "other_e", "salary", "freelance", "gift",
+                     "invest", "other_i"]
+        let key = normalize(id)
+        if let i = order.firstIndex(of: key) { return i }
+        // Stable fallback for user-created categories (hashValue is randomized
+        // per launch, so sum the scalars instead).
+        return key.unicodeScalars.reduce(0) { $0 &+ Int($1.value) }
+    }
 
     /// Strips the `cat-`/`wallet-` seed prefix and maps Swift-side spellings onto
     /// the canonical lookup keys above.

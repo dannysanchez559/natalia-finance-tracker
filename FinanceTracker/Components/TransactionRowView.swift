@@ -2,9 +2,11 @@
 //  TransactionRowView.swift
 //  Finna
 //
-//  Single transaction row: category emoji in a colored circle, category
-//  name, a "wallet · note" subtitle, and the signed amount. The parent
-//  resolves the category and wallet so rows don't each run a query.
+//  Single transaction row in the new pastel + SF Symbol language: an IconBadge
+//  on the left (category symbol on its pastel tint), the category label with the
+//  wallet name beneath, and the signed amount on the right. The row is
+//  transparent — it inherits its parent's background. Swipe actions and the
+//  repeat-to-quick-action button live at the call sites, not here.
 //
 
 import SwiftUI
@@ -18,10 +20,12 @@ struct TransactionRowView: View {
 
     private var isIncome: Bool { transaction.type == "income" }
 
-    private var subtitle: String {
-        let parts = [wallet?.name, transaction.note.isEmpty ? nil : transaction.note]
-            .compactMap { $0 }
-        return parts.joined(separator: " · ")
+    private var pastel: PastelStyle {
+        IconMap.pastel(forCategory: category?.id ?? transaction.categoryId)
+    }
+
+    private var symbol: String {
+        IconMap.symbol(forCategory: category?.id ?? transaction.categoryId)
     }
 
     private var amountText: String {
@@ -31,20 +35,14 @@ struct TransactionRowView: View {
 
     var body: some View {
         HStack(spacing: AppTheme.Spacing.md) {
-            ZStack {
-                RoundedRectangle(cornerRadius: AppTheme.Radius.small, style: .continuous)
-                    .fill(Color(hex: category?.colorHex ?? "#8A7A66").opacity(0.15))
-                Text(category?.emoji ?? "📌")
-                    .font(.system(size: 16))
-            }
-            .frame(width: 32, height: 32)
+            IconBadge(symbol: symbol, style: pastel, size: 44)
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(category?.label ?? "Uncategorized")
                     .font(.appSans(AppTheme.Typography.fontBody, weight: .medium))
                     .foregroundStyle(AppTheme.Colors.textPrimary)
-                if !subtitle.isEmpty {
-                    Text(subtitle)
+                if let name = wallet?.name {
+                    Text(name)
                         .font(.appSans(AppTheme.Typography.fontLabel, weight: .medium))
                         .foregroundStyle(AppTheme.Colors.textMuted)
                         .lineLimit(1)

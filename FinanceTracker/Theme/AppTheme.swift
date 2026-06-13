@@ -173,22 +173,25 @@ extension Font {
 
 // MARK: - Card Style
 
+/// White surface container for the grouped transaction list. Padding is 0 by
+/// default so the rows inside control their own insets; corner radius 18 with a
+/// soft shadow and no border.
 struct CardStyle: ViewModifier {
-    var padding: CGFloat = AppTheme.Spacing.md
+    var padding: CGFloat = 0
 
     func body(content: Content) -> some View {
         content
             .padding(padding)
             .background(AppTheme.Colors.surface)
-            .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.large, style: .continuous))
-            // Soft floating shadow (Ofspace-inspired) — no border.
-            .shadow(color: .black.opacity(0.08), radius: 16, x: 0, y: 6)
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .shadow(color: .black.opacity(0.05), radius: 14, x: 0, y: 4)
     }
 }
 
 extension View {
-    /// Applies the standard surface card treatment (background, radius, soft shadow).
-    func cardStyle(padding: CGFloat = AppTheme.Spacing.md) -> some View {
+    /// Wraps grouped transaction lists in the white surface card (background,
+    /// radius, soft shadow). Pass `padding` if the content needs inset.
+    func cardStyle(padding: CGFloat = 0) -> some View {
         modifier(CardStyle(padding: padding))
     }
 }
