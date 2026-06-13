@@ -2,11 +2,12 @@
 //  HomeView.swift
 //  Finna
 //
-//  Dashboard — the most visible screen. Ofspace-inspired layout: greeting
-//  header with avatar, a bold hero balance card (this month, income/expense
-//  split), a horizontal Accounts strip (all-time wallet balances), a budgets
-//  card with progress bars, and recent transactions (last 3 days). All data is
-//  read from SwiftData and derived in place.
+//  Dashboard — the most visible screen. Professional pastel layout: greeting
+//  header with avatar, a gradient hero balance card (this month, income/expense
+//  split), a horizontal Accounts strip of pastel AccountCards (all-time wallet
+//  balances), a pastel BudgetCard grid, optional quick-add pills, and recent
+//  transactions (last 3 days) grouped into white cards. All data is read from
+//  SwiftData and derived in place.
 //
 
 import SwiftUI
@@ -35,6 +36,11 @@ struct HomeView: View {
     @State private var quickActions: [QuickAction] = []
     @State private var budgetLimits: [String: Double] = [:]
 
+    /// Vertical gap between the major sections of the dashboard.
+    private let sectionSpacing: CGFloat = 28
+    /// Horizontal inset for content that runs to the screen edge.
+    private let edgePadding: CGFloat = 20
+
     // Fast lookups for resolving a transaction's category/wallet in rows.
     private var categoryById: [String: AppCategory] {
         Dictionary(uniqueKeysWithValues: categories.map { ($0.id, $0) })
@@ -46,16 +52,16 @@ struct HomeView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: AppTheme.Spacing.lg) {
+                VStack(spacing: sectionSpacing) {
                     header
                     if let trip = activeTrip { tripBanner(trip) }
                     balanceCard
                     walletsSection
                     budgetSection
-                    recentSection
                     if !quickActions.isEmpty { quickAddSection }
+                    recentSection
                 }
-                .padding(AppTheme.Spacing.md)
+                .padding(.top, AppTheme.Spacing.md)
             }
             .background(AppTheme.Colors.background)
             .toolbar(.hidden, for: .navigationBar)
@@ -91,7 +97,7 @@ struct HomeView: View {
                     .font(.appSans(AppTheme.Typography.fontCaption, weight: .semibold))
                     .foregroundStyle(AppTheme.Colors.textMuted)
                 Text(monthTitle)
-                    .font(.appSans(AppTheme.Typography.fontTitle, weight: .semibold))
+                    .font(.appSans(AppTheme.Typography.fontTitle, weight: .bold))
                     .foregroundStyle(AppTheme.Colors.textPrimary)
             }
             Spacer()
@@ -116,6 +122,7 @@ struct HomeView: View {
             }
             .buttonStyle(.plain)
         }
+        .padding(.horizontal, edgePadding)
     }
 
     private var monthTitle: String {
@@ -154,6 +161,7 @@ struct HomeView: View {
             .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.medium, style: .continuous))
         }
         .buttonStyle(.plain)
+        .padding(.horizontal, edgePadding)
     }
 
     // MARK: - Hero Balance Card
@@ -184,7 +192,7 @@ struct HomeView: View {
             HStack {
                 Text("Working balance")
                     .font(.appSans(AppTheme.Typography.fontCaption, weight: .semibold))
-                    .foregroundStyle(.white.opacity(0.7))
+                    .foregroundStyle(.white.opacity(0.8))
                 Spacer()
                 currencyButton
             }
@@ -208,9 +216,10 @@ struct HomeView: View {
         }
         .padding(AppTheme.Spacing.lg)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(AppTheme.Colors.heroCard)
-        .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.large, style: .continuous))
+        .background(AppTheme.Colors.heroGradient)
+        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         .shadow(color: AppTheme.Colors.heroCard.opacity(0.35), radius: 16, x: 0, y: 8)
+        .padding(.horizontal, edgePadding)
     }
 
     private func heroInnerCard(title: String, amount: Double) -> some View {
@@ -223,8 +232,8 @@ struct HomeView: View {
                 .foregroundStyle(.white)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(10)
-        .background(Color.white.opacity(0.20))
+        .padding(12)
+        .background(Color.white.opacity(0.18))
         .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.medium, style: .continuous))
     }
 
@@ -239,7 +248,7 @@ struct HomeView: View {
             .foregroundStyle(.white)
             .padding(.horizontal, AppTheme.Spacing.sm)
             .padding(.vertical, 5)
-            .background(Color.white.opacity(0.15))
+            .background(Color.white.opacity(0.20))
             .clipShape(Capsule())
         }
         .buttonStyle(.plain)
@@ -256,54 +265,21 @@ struct HomeView: View {
                 .font(.appSans(AppTheme.Typography.fontLabel, weight: .medium))
                 .foregroundStyle(AppTheme.Colors.accent)
             }
+            .padding(.horizontal, edgePadding)
 
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 16) {
-                    ForEach(wallets) { wallet in
-                        walletCard(wallet)
+                HStack(spacing: 12) {
+                    ForEach(Array(wallets.enumerated()), id: \.element.id) { index, wallet in
+                        AccountCard(
+                            wallet: wallet,
+                            balance: transactions.balance(forWallet: wallet.id),
+                            index: index
+                        )
                     }
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, edgePadding)
             }
         }
-    }
-
-    private func walletCard(_ wallet: Wallet) -> some View {
-        let balance = transactions.balance(forWallet: wallet.id)
-        return Button {
-            // TODO: Phase 4 — present edit/delete sheet for this wallet.
-        } label: {
-            VStack(spacing: 0) {
-                // Full-width colored bar at the very top (clipped to the
-                // card's top corners by the outer rounded clip shape).
-                Rectangle()
-                    .fill(Color(hex: wallet.colorHex))
-                    .frame(height: 4)
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(wallet.name)
-                        .font(.appSans(AppTheme.Typography.fontCaption, weight: .medium))
-                        .foregroundStyle(AppTheme.Colors.textMuted)
-                        .lineLimit(1)
-                    Text(store.formatAmount(balance))
-                        .font(.appSans(AppTheme.Typography.fontCardNumber, weight: .semibold))
-                        .foregroundStyle(AppTheme.Colors.textPrimary)
-                        .lineLimit(1)
-                    Spacer(minLength: 0)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-                .overlay(alignment: .bottomTrailing) {
-                    Text(wallet.emoji)
-                        .font(.system(size: 20))
-                }
-                .padding(12)
-            }
-            .frame(width: 140, height: 90)
-            .background(AppTheme.Colors.surface)
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .shadow(color: .black.opacity(0.08), radius: 16, x: 0, y: 6)
-        }
-        .buttonStyle(.plain)
     }
 
     // MARK: - Budgets
@@ -342,18 +318,24 @@ struct HomeView: View {
             if budgetItems.isEmpty {
                 budgetEmptyState
             } else {
-                LazyVGrid(columns: budgetColumns, spacing: AppTheme.Spacing.md) {
-                    ForEach(budgetItems) { item in
-                        budgetCard(item)
+                LazyVGrid(columns: budgetColumns, spacing: 12) {
+                    ForEach(Array(budgetItems.enumerated()), id: \.element.id) { index, item in
+                        BudgetCard(
+                            category: item.category,
+                            spent: item.spent,
+                            limit: item.limit,
+                            index: index
+                        )
                     }
                 }
             }
         }
+        .padding(.horizontal, edgePadding)
     }
 
     private var budgetColumns: [GridItem] {
-        [GridItem(.flexible(), spacing: AppTheme.Spacing.md),
-         GridItem(.flexible(), spacing: AppTheme.Spacing.md)]
+        [GridItem(.flexible(), spacing: 12),
+         GridItem(.flexible(), spacing: 12)]
     }
 
     private var budgetEmptyState: some View {
@@ -361,51 +343,49 @@ struct HomeView: View {
             .font(.appSans(AppTheme.Typography.fontLabel, weight: .medium))
             .foregroundStyle(AppTheme.Colors.textMuted)
             .frame(maxWidth: .infinity, alignment: .center)
-            .padding(.vertical, AppTheme.Spacing.sm)
-            .cardStyle()
+            .padding(.vertical, AppTheme.Spacing.md)
     }
 
-    private func budgetCard(_ item: BudgetItem) -> some View {
-        let fillColor: Color = {
-            if item.ratio >= 1 { return AppTheme.Colors.expense }
-            if item.ratio >= 0.8 { return AppTheme.Colors.warning }
-            return AppTheme.Colors.accent
-        }()
+    // MARK: - Quick Add
 
-        return VStack(alignment: .leading, spacing: 4) {
-            Text(item.category.emoji)
-                .font(.system(size: 28))
-            Text(item.category.label)
-                .font(.appSans(AppTheme.Typography.fontLabel, weight: .semibold))
-                .foregroundStyle(AppTheme.Colors.textPrimary)
-                .lineLimit(1)
-            Text(store.formatAmount(item.spent))
-                .font(.appSans(AppTheme.Typography.fontLabel, weight: .semibold))
-                .foregroundStyle(AppTheme.Colors.accent)
-            Text(store.formatAmount(item.limit))
-                .font(.appSans(AppTheme.Typography.fontCaption, weight: .medium))
-                .foregroundStyle(AppTheme.Colors.textMuted)
+    private var quickAddSection: some View {
+        VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
+            sectionHeader("Quick Add") { EmptyView() }
+                .padding(.horizontal, edgePadding)
 
-            Spacer(minLength: 0)
-
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(AppTheme.Colors.borderAlt)
-                    Capsule()
-                        .fill(fillColor)
-                        .frame(width: geo.size.width * min(item.ratio, 1))
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    ForEach(Array(quickActions.enumerated()), id: \.element.id) { index, action in
+                        quickAddChip(action, index: index)
+                    }
                 }
+                .padding(.horizontal, edgePadding)
             }
-            .frame(height: 4)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
-        .frame(height: 110)
-        // Matches CardStyle surface/radius/shadow, with an enforced fixed height.
-        .background(AppTheme.Colors.surface)
-        .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.large, style: .continuous))
-        .shadow(color: .black.opacity(0.08), radius: 16, x: 0, y: 6)
+    }
+
+    private func quickAddChip(_ action: QuickAction, index: Int) -> some View {
+        let pastel = IconMap.pastel(forIndex: index)
+        let symbol = IconMap.symbol(forCategory: action.categoryId)
+        return Button { runQuickAction(action) } label: {
+            HStack(spacing: AppTheme.Spacing.sm) {
+                IconBadge(symbol: symbol, style: pastel, size: 28)
+                Text(store.formatAmount(action.amount))
+                    .font(.appSans(14, weight: .semibold))
+                    .foregroundStyle(pastel.text)
+            }
+            .padding(.leading, 8)
+            .padding(.trailing, 14)
+            .padding(.vertical, 8)
+            .background(pastel.fill)
+            .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .contextMenu {
+            Button(role: .destructive) { removeQuickAction(action) } label: {
+                Label("Remove", systemImage: "trash")
+            }
+        }
     }
 
     // MARK: - Recent Transactions
@@ -431,11 +411,14 @@ struct HomeView: View {
             if recentGroups.isEmpty {
                 emptyState
             } else {
-                ForEach(recentGroups) { group in
-                    dayGroup(group)
+                VStack(spacing: AppTheme.Spacing.md) {
+                    ForEach(recentGroups) { group in
+                        dayGroup(group)
+                    }
                 }
             }
         }
+        .padding(.horizontal, edgePadding)
     }
 
     private func dayGroup(_ group: DayGroup) -> some View {
@@ -443,14 +426,14 @@ struct HomeView: View {
             Text(group.label)
                 .font(.appSans(AppTheme.Typography.fontLabel, weight: .semibold))
                 .foregroundStyle(AppTheme.Colors.textPrimary)
-                .padding(.bottom, AppTheme.Spacing.md)
+                .padding(.bottom, AppTheme.Spacing.sm)
 
             VStack(spacing: 0) {
                 ForEach(Array(group.transactions.enumerated()), id: \.element.id) { index, tx in
                     recentRow(tx)
                     if index < group.transactions.count - 1 {
                         Divider()
-                            .overlay(AppTheme.Colors.borderAlt)
+                            .overlay(AppTheme.Colors.border)
                     }
                 }
             }
@@ -478,7 +461,7 @@ struct HomeView: View {
             .disabled(quickActions.count >= 6)
             .opacity(quickActions.count >= 6 ? 0.3 : 1)
         }
-        .padding(.vertical, 2)
+        .padding(14)
     }
 
     private var emptyState: some View {
@@ -487,7 +470,7 @@ struct HomeView: View {
                 .font(.system(size: 40))
                 .foregroundStyle(AppTheme.Colors.textMuted.opacity(0.5))
             Text("No entries yet")
-                .font(.appSerif(16))
+                .font(.appSans(16, weight: .semibold))
                 .foregroundStyle(AppTheme.Colors.textMuted)
             Text("Tap + to add your first record")
                 .font(.appSans(13))
@@ -495,50 +478,6 @@ struct HomeView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 40)
-    }
-
-    // MARK: - Quick Add
-
-    private var quickAddSection: some View {
-        VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
-            sectionHeader("Quick Add") { EmptyView() }
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: AppTheme.Spacing.sm) {
-                    ForEach(quickActions) { action in
-                        quickAddChip(action)
-                    }
-                }
-                .padding(.horizontal, 1)
-            }
-        }
-    }
-
-    private func quickAddChip(_ action: QuickAction) -> some View {
-        let category = categoryById[action.categoryId]
-        return HStack(spacing: AppTheme.Spacing.sm) {
-            Button { runQuickAction(action) } label: {
-                HStack(spacing: 6) {
-                    Text(category?.emoji ?? "📌")
-                    Text(store.formatAmount(action.amount))
-                        .font(.appSans(14, weight: .semibold))
-                        .foregroundStyle(AppTheme.Colors.textPrimary)
-                }
-            }
-            .buttonStyle(.plain)
-
-            Button { removeQuickAction(action) } label: {
-                Image(systemName: "xmark")
-                    .font(.system(size: 10, weight: .bold))
-                    .foregroundStyle(AppTheme.Colors.textMuted)
-            }
-            .buttonStyle(.plain)
-        }
-        .padding(.horizontal, AppTheme.Spacing.md)
-        .padding(.vertical, AppTheme.Spacing.sm)
-        .background(AppTheme.Colors.surface)
-        .clipShape(Capsule())
-        .shadow(color: .black.opacity(0.06), radius: 12, x: 0, y: 4)
     }
 
     // MARK: - Section Header Helper
