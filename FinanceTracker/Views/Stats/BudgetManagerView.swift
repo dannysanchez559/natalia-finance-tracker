@@ -65,8 +65,11 @@ struct BudgetManagerView: View {
         let hasValue = !(limitText[category.id] ?? "").isEmpty
 
         return HStack(spacing: AppTheme.Spacing.sm) {
-            Text(category.emoji)
-                .font(.system(size: 18))
+            IconBadge(
+                symbol: IconMap.symbol(forCategory: category.id),
+                style: IconMap.pastel(forCategory: category.id),
+                size: 28
+            )
             Text(category.label)
                 .font(.appSans(AppTheme.Typography.fontBody, weight: .medium))
                 .foregroundStyle(AppTheme.Colors.textPrimary)

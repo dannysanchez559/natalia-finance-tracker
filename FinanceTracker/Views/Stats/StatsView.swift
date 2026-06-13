@@ -103,7 +103,8 @@ struct StatsView: View {
                     breakdownCard
                     budgetsCard
                 }
-                .padding(AppTheme.Spacing.md)
+                .padding(.horizontal, 20)
+                .padding(.vertical, AppTheme.Spacing.md)
             }
             .background(AppTheme.Colors.background)
             .navigationTitle("Stats")
@@ -159,7 +160,7 @@ struct StatsView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .cardStyle()
+        .cardStyle(padding: AppTheme.Spacing.md)
     }
 
     private var donut: some View {
@@ -203,8 +204,11 @@ struct StatsView: View {
                 .fill(color)
                 .frame(width: 10, height: 10)
 
-            Text(slice.category.emoji)
-                .font(.system(size: 15))
+            IconBadge(
+                symbol: IconMap.symbol(forCategory: slice.category.id),
+                style: IconMap.pastel(forCategory: slice.category.id),
+                size: 28
+            )
             Text(slice.category.label)
                 .font(.appSans(AppTheme.Typography.fontBody, weight: .medium))
                 .foregroundStyle(AppTheme.Colors.textPrimary)
@@ -272,14 +276,17 @@ struct StatsView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .cardStyle()
+        .cardStyle(padding: AppTheme.Spacing.md)
     }
 
     private func budgetRowView(_ row: BudgetRow) -> some View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
             HStack(spacing: AppTheme.Spacing.sm) {
-                Text(row.category.emoji)
-                    .font(.system(size: 15))
+                IconBadge(
+                    symbol: IconMap.symbol(forCategory: row.category.id),
+                    style: IconMap.pastel(forCategory: row.category.id),
+                    size: 28
+                )
                 Text(row.category.label)
                     .font(.appSans(AppTheme.Typography.fontBody, weight: .medium))
                     .foregroundStyle(AppTheme.Colors.textPrimary)

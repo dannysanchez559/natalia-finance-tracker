@@ -39,7 +39,7 @@ struct MainTabView: View {
         }
         .sheet(isPresented: $showingAddTransaction) {
             AddTransactionView(editing: nil)
-                .presentationDetents([.medium, .large])
+                .presentationDetents([.large])
                 .presentationDragIndicator(.visible)
         }
     }

@@ -27,7 +27,8 @@ struct PlansView: View {
                     SavingsGoalsSection()
                     SubscriptionsSection()
                 }
-                .padding(AppTheme.Spacing.md)
+                .padding(.horizontal, 20)
+                .padding(.vertical, AppTheme.Spacing.md)
             }
             .background(AppTheme.Colors.background)
             .navigationTitle("Plans")
@@ -49,17 +50,17 @@ struct PlansView: View {
 
 // MARK: - Shared Building Blocks
 
-/// Section header: title, an SF Symbol, and a trailing circular Add button.
+/// Section header: a pastel IconBadge, the title, and a trailing circular Add
+/// button (a consistent 32pt accent circle).
 private struct PlanSectionHeader: View {
     let title: String
     let systemImage: String
+    let pastel: PastelStyle
     let onAdd: () -> Void
 
     var body: some View {
         HStack(spacing: AppTheme.Spacing.sm) {
-            Image(systemName: systemImage)
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(AppTheme.Colors.accent)
+            IconBadge(symbol: systemImage, style: pastel, size: 32)
             Text(title)
                 .font(.appSans(AppTheme.Typography.fontTitle, weight: .semibold))
                 .foregroundStyle(AppTheme.Colors.textPrimary)
@@ -75,6 +76,14 @@ private struct PlanSectionHeader: View {
             .buttonStyle(.plain)
         }
     }
+}
+
+/// Returns `stored` when it is an SF Symbol name (ASCII), otherwise `fallback`.
+/// Goals and subscriptions keep their icon in the legacy `emoji` field; new
+/// records store an SF Symbol name there, while older records may still hold an
+/// emoji — this renders both safely without a data migration.
+private func planSymbol(_ stored: String, fallback: String) -> String {
+    !stored.isEmpty && stored.allSatisfy(\.isASCII) ? stored : fallback
 }
 
 /// A pill badge — used for recurring frequency and subscription period.
@@ -137,17 +146,19 @@ private struct PlanEmptyRow: View {
 private struct PlanSectionCard<Content: View>: View {
     let title: String
     let systemImage: String
+    let pastel: PastelStyle
     let onAdd: () -> Void
     @ViewBuilder var content: Content
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            PlanSectionHeader(title: title, systemImage: systemImage, onAdd: onAdd)
+            PlanSectionHeader(title: title, systemImage: systemImage, pastel: pastel, onAdd: onAdd)
             Divider()
                 .overlay(AppTheme.Colors.borderAlt)
                 .padding(.vertical, AppTheme.Spacing.sm)
             content
         }
+        .padding(AppTheme.Spacing.md)
         .cardStyle()
     }
 }
@@ -238,7 +249,7 @@ private struct RecurringSection: View {
     }
 
     var body: some View {
-        PlanSectionCard(title: "Recurring", systemImage: "repeat") {
+        PlanSectionCard(title: "Recurring", systemImage: "arrow.triangle.2.circlepath", pastel: .peach) {
             showingForm = true
         } content: {
             if rules.isEmpty {
@@ -265,8 +276,11 @@ private struct RecurringSection: View {
         let isIncome = rule.type == "income"
         let title = rule.note.isEmpty ? (category?.label ?? "Recurring") : rule.note
         return HStack(spacing: AppTheme.Spacing.md) {
-            Text(category?.emoji ?? "🔁")
-                .font(.system(size: 24))
+            IconBadge(
+                symbol: IconMap.symbol(forCategory: rule.categoryId),
+                style: IconMap.pastel(forCategory: rule.categoryId),
+                size: 44
+            )
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
                     .font(.appSans(AppTheme.Typography.fontBody, weight: .medium))
@@ -301,7 +315,7 @@ private struct TripsSection: View {
     @State private var tripToDelete: Trip?
 
     var body: some View {
-        PlanSectionCard(title: "Trips", systemImage: "airplane") {
+        PlanSectionCard(title: "Trips", systemImage: "airplane", pastel: .sky) {
             showingForm = true
         } content: {
             if trips.isEmpty {
@@ -409,7 +423,7 @@ private struct SavingsGoalsSection: View {
     @State private var depositText = ""
 
     var body: some View {
-        PlanSectionCard(title: "Savings Goals", systemImage: "target") {
+        PlanSectionCard(title: "Savings Goals", systemImage: "target", pastel: .mint) {
             showingForm = true
         } content: {
             if goals.isEmpty {
@@ -447,8 +461,11 @@ private struct SavingsGoalsSection: View {
         let ratio = goal.target > 0 ? goal.saved / goal.target : 0
         return VStack(alignment: .leading, spacing: AppTheme.Spacing.md) {
             HStack(spacing: AppTheme.Spacing.sm) {
-                Text(goal.emoji)
-                    .font(.system(size: 24))
+                IconBadge(
+                    symbol: planSymbol(goal.emoji, fallback: "target"),
+                    style: .mint,
+                    size: 40
+                )
                 Text(goal.name)
                     .font(.appSans(AppTheme.Typography.fontBody, weight: .semibold))
                     .foregroundStyle(AppTheme.Colors.textPrimary)
@@ -517,7 +534,7 @@ private struct SubscriptionsSection: View {
     }
 
     var body: some View {
-        PlanSectionCard(title: "Subscriptions", systemImage: "creditcard") {
+        PlanSectionCard(title: "Subscriptions", systemImage: "creditcard.fill", pastel: .lavender) {
             showingForm = true
         } content: {
             if subscriptions.isEmpty {
@@ -542,8 +559,11 @@ private struct SubscriptionsSection: View {
 
     private func subscriptionRow(_ sub: Subscription) -> some View {
         HStack(spacing: AppTheme.Spacing.md) {
-            Text(sub.emoji)
-                .font(.system(size: 24))
+            IconBadge(
+                symbol: planSymbol(sub.emoji, fallback: "creditcard.fill"),
+                style: .lavender,
+                size: 44
+            )
             Text(sub.name)
                 .font(.appSans(AppTheme.Typography.fontBody, weight: .medium))
                 .foregroundStyle(AppTheme.Colors.textPrimary)
@@ -698,8 +718,8 @@ private struct RecurringFormView: View {
             sectionLabel("Wallet")
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: AppTheme.Spacing.sm) {
-                    ForEach(wallets) { wallet in
-                        walletChip(wallet)
+                    ForEach(Array(wallets.enumerated()), id: \.element.id) { index, wallet in
+                        walletChip(wallet, index: index)
                     }
                 }
                 .padding(.horizontal, 1)
@@ -707,15 +727,20 @@ private struct RecurringFormView: View {
         }
     }
 
-    private func walletChip(_ wallet: Wallet) -> some View {
+    private func walletChip(_ wallet: Wallet, index: Int) -> some View {
         let isSelected = wallet.id == walletId
         return Button { walletId = wallet.id } label: {
-            HStack(spacing: 6) {
-                Text(wallet.emoji)
+            HStack(spacing: 8) {
+                IconBadge(
+                    symbol: IconMap.symbol(forWallet: wallet.id),
+                    style: IconMap.pastel(forIndex: index),
+                    size: 24
+                )
                 Text(wallet.name).font(.appSans(14, weight: .medium))
             }
-            .padding(.horizontal, AppTheme.Spacing.md)
-            .padding(.vertical, AppTheme.Spacing.sm)
+            .padding(.leading, 6)
+            .padding(.trailing, AppTheme.Spacing.md)
+            .padding(.vertical, 6)
             .background(isSelected ? accent : AppTheme.Colors.surface)
             .foregroundStyle(isSelected ? .white : AppTheme.Colors.textPrimary)
             .clipShape(Capsule())
@@ -740,10 +765,13 @@ private struct RecurringFormView: View {
 
     private func categoryCell(_ category: AppCategory) -> some View {
         let isSelected = category.id == categoryId
-        let color = Color(hex: category.colorHex)
         return Button { categoryId = category.id } label: {
-            VStack(spacing: 4) {
-                Text(category.emoji).font(.system(size: 24))
+            VStack(spacing: 6) {
+                IconBadge(
+                    symbol: IconMap.symbol(forCategory: category.id),
+                    style: IconMap.pastel(forCategory: category.id),
+                    size: 40
+                )
                 Text(category.label)
                     .font(.appSans(11))
                     .foregroundStyle(AppTheme.Colors.textPrimary)
@@ -751,11 +779,11 @@ private struct RecurringFormView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, AppTheme.Spacing.sm)
-            .background(isSelected ? color.opacity(0.18) : AppTheme.Colors.surface)
+            .background(isSelected ? AppTheme.Colors.accent.opacity(0.12) : AppTheme.Colors.surface)
             .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.medium, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: AppTheme.Radius.medium, style: .continuous)
-                    .stroke(isSelected ? color : AppTheme.Colors.border, lineWidth: isSelected ? 2 : 1)
+                    .stroke(isSelected ? AppTheme.Colors.accent : AppTheme.Colors.border, lineWidth: isSelected ? 2 : 1)
             )
         }
         .buttonStyle(.plain)
@@ -886,9 +914,13 @@ private struct SavingsGoalFormView: View {
 
     @State private var name = ""
     @State private var targetText = ""
-    @State private var emoji = "🎯"
+    // The model's `emoji` field now stores an SF Symbol name (see planSymbol).
+    @State private var emoji = "target"
 
-    private let emojiChoices = ["🎯", "🏠", "✈️", "🚗", "💻", "👶", "💍", "🎓", "🏋️", "🌴"]
+    private let symbolChoices = [
+        "target", "house.fill", "airplane", "car.fill", "laptopcomputer",
+        "gift.fill", "heart.fill", "graduationcap.fill", "figure.run", "leaf.fill",
+    ]
 
     private var targetValue: Double {
         Double(targetText.replacingOccurrences(of: ",", with: ".")) ?? 0
@@ -927,7 +959,7 @@ private struct SavingsGoalFormView: View {
                         }
                         .cardStyle()
 
-                        emojiPicker
+                        iconPicker
                     }
                     .padding(AppTheme.Spacing.md)
                 }
@@ -948,7 +980,7 @@ private struct SavingsGoalFormView: View {
         }
     }
 
-    private var emojiPicker: some View {
+    private var iconPicker: some View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
             Text("Icon")
                 .font(.appSans(AppTheme.Typography.fontLabel, weight: .semibold))
@@ -957,14 +989,13 @@ private struct SavingsGoalFormView: View {
                 columns: Array(repeating: GridItem(.flexible(), spacing: AppTheme.Spacing.sm), count: 5),
                 spacing: AppTheme.Spacing.sm
             ) {
-                ForEach(emojiChoices, id: \.self) { choice in
+                ForEach(symbolChoices, id: \.self) { choice in
                     let isSelected = choice == emoji
                     Button { emoji = choice } label: {
-                        Text(choice)
-                            .font(.system(size: 26))
+                        IconBadge(symbol: choice, style: .mint, size: 36)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, AppTheme.Spacing.sm)
-                            .background(isSelected ? AppTheme.Colors.accent.opacity(0.18) : AppTheme.Colors.surface)
+                            .background(isSelected ? AppTheme.Colors.accent.opacity(0.12) : AppTheme.Colors.surface)
                             .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.medium, style: .continuous))
                             .overlay(
                                 RoundedRectangle(cornerRadius: AppTheme.Radius.medium, style: .continuous)
@@ -998,22 +1029,23 @@ private struct SubscriptionFormView: View {
     @Environment(\.modelContext) private var modelContext
 
     @State private var name = ""
-    @State private var emoji = "🔁"
+    // The model's `emoji` field now stores an SF Symbol name (see planSymbol).
+    @State private var emoji = "creditcard.fill"
     @State private var amountText = ""
     @State private var period = "monthly"
 
     private struct Preset: Identifiable {
         let name: String
-        let emoji: String
+        let symbol: String
         var id: String { name }
     }
     private let presets: [Preset] = [
-        .init(name: "Netflix", emoji: "🎬"),
-        .init(name: "Spotify", emoji: "🎵"),
-        .init(name: "YouTube", emoji: "▶️"),
-        .init(name: "iCloud", emoji: "☁️"),
-        .init(name: "Apple Music", emoji: "🎧"),
-        .init(name: "Gym", emoji: "🏋️"),
+        .init(name: "Netflix", symbol: "film.fill"),
+        .init(name: "Spotify", symbol: "music.note"),
+        .init(name: "YouTube", symbol: "play.rectangle.fill"),
+        .init(name: "iCloud", symbol: "cloud.fill"),
+        .init(name: "Apple Music", symbol: "music.note.list"),
+        .init(name: "Gym", symbol: "figure.run"),
     ]
 
     private var amountValue: Double {
@@ -1058,17 +1090,18 @@ private struct SubscriptionFormView: View {
                 .foregroundStyle(AppTheme.Colors.textMuted)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: AppTheme.Spacing.sm) {
-                    ForEach(presets) { preset in
+                    ForEach(Array(presets.enumerated()), id: \.element.id) { index, preset in
                         Button {
                             name = preset.name
-                            emoji = preset.emoji
+                            emoji = preset.symbol
                         } label: {
-                            HStack(spacing: 6) {
-                                Text(preset.emoji)
+                            HStack(spacing: 8) {
+                                IconBadge(symbol: preset.symbol, style: IconMap.pastel(forIndex: index), size: 24)
                                 Text(preset.name).font(.appSans(14, weight: .medium))
                             }
-                            .padding(.horizontal, AppTheme.Spacing.md)
-                            .padding(.vertical, AppTheme.Spacing.sm)
+                            .padding(.leading, 6)
+                            .padding(.trailing, AppTheme.Spacing.md)
+                            .padding(.vertical, 6)
                             .background(name == preset.name ? AppTheme.Colors.accent : AppTheme.Colors.surface)
                             .foregroundStyle(name == preset.name ? .white : AppTheme.Colors.textPrimary)
                             .clipShape(Capsule())
@@ -1084,8 +1117,8 @@ private struct SubscriptionFormView: View {
 
     private var detailsSection: some View {
         VStack(spacing: AppTheme.Spacing.md) {
-            HStack {
-                Text(emoji).font(.system(size: 22))
+            HStack(spacing: AppTheme.Spacing.sm) {
+                IconBadge(symbol: planSymbol(emoji, fallback: "creditcard.fill"), style: .lavender, size: 32)
                 TextField("Name", text: $name)
                     .font(.appSans(15))
             }

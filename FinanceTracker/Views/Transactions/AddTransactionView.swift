@@ -66,7 +66,8 @@ struct AddTransactionView: View {
                         categorySection
                         detailsSection
                     }
-                    .padding(AppTheme.Spacing.md)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, AppTheme.Spacing.md)
                 }
             }
             .navigationTitle(isEditing ? "Edit Transaction" : "New Transaction")
@@ -147,8 +148,8 @@ struct AddTransactionView: View {
             sectionLabel("Wallet")
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: AppTheme.Spacing.sm) {
-                    ForEach(wallets) { wallet in
-                        walletChip(wallet)
+                    ForEach(Array(wallets.enumerated()), id: \.element.id) { index, wallet in
+                        walletChip(wallet, index: index)
                     }
                 }
                 .padding(.horizontal, 1) // keeps stroke from clipping
@@ -156,18 +157,23 @@ struct AddTransactionView: View {
         }
     }
 
-    private func walletChip(_ wallet: Wallet) -> some View {
+    private func walletChip(_ wallet: Wallet, index: Int) -> some View {
         let isSelected = wallet.id == walletId
         return Button {
             walletId = wallet.id
         } label: {
-            HStack(spacing: 6) {
-                Text(wallet.emoji)
+            HStack(spacing: 8) {
+                IconBadge(
+                    symbol: IconMap.symbol(forWallet: wallet.id),
+                    style: IconMap.pastel(forIndex: index),
+                    size: 24
+                )
                 Text(wallet.name)
                     .font(.appSans(14, weight: .medium))
             }
-            .padding(.horizontal, AppTheme.Spacing.md)
-            .padding(.vertical, AppTheme.Spacing.sm)
+            .padding(.leading, 6)
+            .padding(.trailing, AppTheme.Spacing.md)
+            .padding(.vertical, 6)
             .background(isSelected ? accent : AppTheme.Colors.surface)
             .foregroundStyle(isSelected ? .white : AppTheme.Colors.textPrimary)
             .clipShape(Capsule())
@@ -197,13 +203,15 @@ struct AddTransactionView: View {
 
     private func categoryCell(_ category: AppCategory) -> some View {
         let isSelected = category.id == categoryId
-        let color = Color(hex: category.colorHex)
         return Button {
             categoryId = category.id
         } label: {
-            VStack(spacing: 4) {
-                Text(category.emoji)
-                    .font(.system(size: 24))
+            VStack(spacing: 6) {
+                IconBadge(
+                    symbol: IconMap.symbol(forCategory: category.id),
+                    style: IconMap.pastel(forCategory: category.id),
+                    size: 40
+                )
                 Text(category.label)
                     .font(.appSans(11))
                     .foregroundStyle(AppTheme.Colors.textPrimary)
@@ -211,11 +219,11 @@ struct AddTransactionView: View {
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, AppTheme.Spacing.sm)
-            .background(isSelected ? color.opacity(0.18) : AppTheme.Colors.surface)
+            .background(isSelected ? AppTheme.Colors.accent.opacity(0.12) : AppTheme.Colors.surface)
             .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.medium, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: AppTheme.Radius.medium, style: .continuous)
-                    .stroke(isSelected ? color : AppTheme.Colors.border, lineWidth: isSelected ? 2 : 1)
+                    .stroke(isSelected ? AppTheme.Colors.accent : AppTheme.Colors.border, lineWidth: isSelected ? 2 : 1)
             )
         }
         .buttonStyle(.plain)

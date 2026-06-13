@@ -17,29 +17,34 @@ struct OnboardingView: View {
 
     private struct Page: Identifiable {
         let id = UUID()
-        let emoji: String
+        let symbol: String
+        let pastel: PastelStyle
         let title: String
         let body: String
     }
 
     private let pages: [Page] = [
         Page(
-            emoji: "🎯",
+            symbol: "target",
+            pastel: .peach,
             title: "Take control of your money",
             body: "Track spending, set budgets, and reach your goals — all in one simple app."
         ),
         Page(
-            emoji: "💳",
+            symbol: "creditcard.fill",
+            pastel: .sky,
             title: "All your wallets in one place",
             body: "Cash, card, savings — track each separately and see your total balance at a glance."
         ),
         Page(
-            emoji: "✈️",
+            symbol: "airplane",
+            pastel: .mint,
             title: "Built for life on the go",
             body: "Switch currencies anytime. Use Trip mode to tag expenses per journey automatically."
         ),
         Page(
-            emoji: "🔒",
+            symbol: "lock.fill",
+            pastel: .lavender,
             title: "Your data stays with you",
             body: "No accounts, no servers, no tracking. Everything lives on your device."
         ),
@@ -78,8 +83,7 @@ struct OnboardingView: View {
         VStack(spacing: AppTheme.Spacing.lg) {
             Spacer()
 
-            Text(page.emoji)
-                .font(.system(size: 72))
+            IconBadge(symbol: page.symbol, style: page.pastel, size: 96)
 
             Text(page.title)
                 .font(.appSans(AppTheme.Typography.fontTitle, weight: .semibold))

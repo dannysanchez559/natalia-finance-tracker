@@ -158,6 +158,9 @@ struct AllTransactionsView: View {
         .onTapGesture { editingTransaction = tx }
         .listRowBackground(AppTheme.Colors.surface)
         .listRowSeparatorTint(AppTheme.Colors.borderAlt)
+        // Inset the divider to start at the transaction text, not under the
+        // 44pt icon badge (badge width + the row's internal spacing).
+        .alignmentGuide(.listRowSeparatorLeading) { _ in 44 + AppTheme.Spacing.md }
         .transition(.asymmetric(insertion: .push(from: .bottom), removal: .opacity))
         .swipeActions(edge: .leading) {
             Button { editingTransaction = tx } label: {

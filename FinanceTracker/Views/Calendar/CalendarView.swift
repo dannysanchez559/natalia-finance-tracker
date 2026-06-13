@@ -101,7 +101,8 @@ struct CalendarView: View {
                     }
                     detailCard
                 }
-                .padding(AppTheme.Spacing.md)
+                .padding(.horizontal, 20)
+                .padding(.vertical, AppTheme.Spacing.md)
             }
             .background(AppTheme.Colors.background)
             .navigationTitle("Calendar")
@@ -137,7 +138,6 @@ struct CalendarView: View {
                     .foregroundStyle(AppTheme.Colors.accent)
             }
         }
-        .padding(.horizontal, AppTheme.Spacing.xs)
     }
 
     // MARK: - Weekday Row
@@ -231,7 +231,7 @@ struct CalendarView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .cardStyle()
+        .cardStyle(padding: AppTheme.Spacing.md)
     }
 
     private var emptyState: some View {
