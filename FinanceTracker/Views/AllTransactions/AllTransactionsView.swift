@@ -63,6 +63,7 @@ struct AllTransactionsView: View {
             }
             .background(AppTheme.Colors.background)
             .navigationTitle("All")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbarContent }
             .safeAreaInset(edge: .bottom) {
                 // Clears the floating + button (56pt) and the tab bar.
@@ -92,6 +93,11 @@ struct AllTransactionsView: View {
 
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
+        ToolbarItem(placement: .principal) {
+            Text("All")
+                .font(.appSans(AppTheme.Typography.fontBody, weight: .semibold))
+                .foregroundStyle(AppTheme.Colors.textPrimary)
+        }
         ToolbarItemGroup(placement: .topBarTrailing) {
             Button { sortMode = sortMode.next } label: {
                 Image(systemName: sortMode.iconName)
@@ -119,7 +125,7 @@ struct AllTransactionsView: View {
                         ForEach(group.transactions) { row($0) }
                     } header: {
                         Text(group.label)
-                            .font(.appSans(13, weight: .semibold))
+                            .font(.appSans(AppTheme.Typography.fontLabel, weight: .semibold))
                             .foregroundStyle(AppTheme.Colors.textPrimary)
                     }
                 }
@@ -151,6 +157,7 @@ struct AllTransactionsView: View {
         .contentShape(Rectangle())
         .onTapGesture { editingTransaction = tx }
         .listRowBackground(AppTheme.Colors.surface)
+        .listRowSeparatorTint(AppTheme.Colors.borderAlt)
         .transition(.asymmetric(insertion: .push(from: .bottom), removal: .opacity))
         .swipeActions(edge: .leading) {
             Button { editingTransaction = tx } label: {

@@ -31,6 +31,14 @@ struct PlansView: View {
             }
             .background(AppTheme.Colors.background)
             .navigationTitle("Plans")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Plans")
+                        .font(.appSans(AppTheme.Typography.fontBody, weight: .semibold))
+                        .foregroundStyle(AppTheme.Colors.textPrimary)
+                }
+            }
             .safeAreaInset(edge: .bottom) {
                 // Clears the floating + button (56pt) and the tab bar.
                 Color.clear.frame(height: 100)
@@ -123,6 +131,39 @@ private struct PlanEmptyRow: View {
     }
 }
 
+/// Wraps a whole section as a contained module: the header + Add button at the
+/// top, a divider, then the section's content rows — all inside one surface
+/// card. Each section supplies its header parameters and a content builder.
+private struct PlanSectionCard<Content: View>: View {
+    let title: String
+    let systemImage: String
+    let onAdd: () -> Void
+    @ViewBuilder var content: Content
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            PlanSectionHeader(title: title, systemImage: systemImage, onAdd: onAdd)
+            Divider()
+                .overlay(AppTheme.Colors.borderAlt)
+                .padding(.vertical, AppTheme.Spacing.sm)
+            content
+        }
+        .cardStyle()
+    }
+}
+
+private extension View {
+    /// Opaque surface treatment for an individual row inside a section card.
+    /// The opacity is what masks the swipe-to-delete control until revealed.
+    func planRow() -> some View {
+        self
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.vertical, AppTheme.Spacing.sm)
+            .background(AppTheme.Colors.surface)
+            .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.medium, style: .continuous))
+    }
+}
+
 /// Wraps a row in a swipe-left-to-reveal delete control. Works outside of a
 /// List (the whole screen is a ScrollView), and gates the delete behind a
 /// confirmation dialog. The content supplies its own card background.
@@ -197,19 +238,19 @@ private struct RecurringSection: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
-            PlanSectionHeader(title: "Recurring", systemImage: "repeat") {
-                showingForm = true
-            }
-
+        PlanSectionCard(title: "Recurring", systemImage: "repeat") {
+            showingForm = true
+        } content: {
             if rules.isEmpty {
                 PlanEmptyRow(text: "No recurring rules yet")
             } else {
-                ForEach(rules) { rule in
-                    SwipeToDeleteContainer(confirmTitle: "Delete this recurring rule?") {
-                        delete(rule)
-                    } content: {
-                        ruleRow(rule)
+                VStack(spacing: AppTheme.Spacing.sm) {
+                    ForEach(rules) { rule in
+                        SwipeToDeleteContainer(confirmTitle: "Delete this recurring rule?") {
+                            delete(rule)
+                        } content: {
+                            ruleRow(rule)
+                        }
                     }
                 }
             }
@@ -238,7 +279,7 @@ private struct RecurringSection: View {
                 .font(.appSans(AppTheme.Typography.fontBody, weight: .semibold))
                 .foregroundStyle(isIncome ? AppTheme.Colors.income : AppTheme.Colors.expense)
         }
-        .cardStyle()
+        .planRow()
     }
 
     private func delete(_ rule: RecurringRule) {
@@ -260,16 +301,16 @@ private struct TripsSection: View {
     @State private var tripToDelete: Trip?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
-            PlanSectionHeader(title: "Trips", systemImage: "airplane") {
-                showingForm = true
-            }
-
+        PlanSectionCard(title: "Trips", systemImage: "airplane") {
+            showingForm = true
+        } content: {
             if trips.isEmpty {
                 PlanEmptyRow(text: "No trips yet")
             } else {
-                ForEach(trips) { trip in
-                    tripCard(trip)
+                VStack(spacing: AppTheme.Spacing.sm) {
+                    ForEach(trips) { trip in
+                        tripCard(trip)
+                    }
                 }
             }
         }
@@ -334,8 +375,7 @@ private struct TripsSection: View {
                     .foregroundStyle(AppTheme.Colors.textMuted)
             }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .cardStyle()
+        .planRow()
     }
 
     /// Activates a trip (clearing any other active trip) or stops it.
@@ -369,19 +409,19 @@ private struct SavingsGoalsSection: View {
     @State private var depositText = ""
 
     var body: some View {
-        VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
-            PlanSectionHeader(title: "Savings Goals", systemImage: "target") {
-                showingForm = true
-            }
-
+        PlanSectionCard(title: "Savings Goals", systemImage: "target") {
+            showingForm = true
+        } content: {
             if goals.isEmpty {
                 PlanEmptyRow(text: "No savings goals yet")
             } else {
-                ForEach(goals) { goal in
-                    SwipeToDeleteContainer(confirmTitle: "Delete this goal?") {
-                        delete(goal)
-                    } content: {
-                        goalCard(goal)
+                VStack(spacing: AppTheme.Spacing.sm) {
+                    ForEach(goals) { goal in
+                        SwipeToDeleteContainer(confirmTitle: "Delete this goal?") {
+                            delete(goal)
+                        } content: {
+                            goalCard(goal)
+                        }
                     }
                 }
             }
@@ -435,8 +475,7 @@ private struct SavingsGoalsSection: View {
                 .font(.appSans(AppTheme.Typography.fontLabel, weight: .medium))
                 .foregroundStyle(AppTheme.Colors.textMuted)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .cardStyle()
+        .planRow()
     }
 
     private func commitDeposit() {
@@ -478,22 +517,22 @@ private struct SubscriptionsSection: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: AppTheme.Spacing.sm) {
-            PlanSectionHeader(title: "Subscriptions", systemImage: "creditcard") {
-                showingForm = true
-            }
-
+        PlanSectionCard(title: "Subscriptions", systemImage: "creditcard") {
+            showingForm = true
+        } content: {
             if subscriptions.isEmpty {
                 PlanEmptyRow(text: "No subscriptions yet")
             } else {
-                ForEach(subscriptions) { sub in
-                    SwipeToDeleteContainer(confirmTitle: "Delete this subscription?") {
-                        delete(sub)
-                    } content: {
-                        subscriptionRow(sub)
+                VStack(spacing: AppTheme.Spacing.sm) {
+                    ForEach(subscriptions) { sub in
+                        SwipeToDeleteContainer(confirmTitle: "Delete this subscription?") {
+                            delete(sub)
+                        } content: {
+                            subscriptionRow(sub)
+                        }
                     }
+                    totalFooter
                 }
-                totalFooter
             }
         }
         .sheet(isPresented: $showingForm) {
@@ -514,7 +553,7 @@ private struct SubscriptionsSection: View {
                 .font(.appSans(AppTheme.Typography.fontBody, weight: .semibold))
                 .foregroundStyle(AppTheme.Colors.textPrimary)
         }
-        .cardStyle()
+        .planRow()
     }
 
     private var totalFooter: some View {
@@ -527,7 +566,6 @@ private struct SubscriptionsSection: View {
                 .font(.appSans(AppTheme.Typography.fontBody, weight: .semibold))
                 .foregroundStyle(AppTheme.Colors.textPrimary)
         }
-        .padding(.horizontal, AppTheme.Spacing.md)
         .padding(.top, AppTheme.Spacing.xs)
     }
 

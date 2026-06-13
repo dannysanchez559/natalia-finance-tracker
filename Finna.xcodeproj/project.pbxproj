@@ -37,6 +37,7 @@
 		E441F7896C58F2FAB66F0A47 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62C3EA5A1E9CDCA71C67D85F /* HomeView.swift */; };
 		EEECD5812A7EB807770E5394 /* FloatingAddButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF607AC3B99AC8B170C54DC0 /* FloatingAddButton.swift */; };
 		CB570001CB570001CB570001 /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB570002CB570002CB570002 /* CustomTabBar.swift */; };
+		A1C0A4A1A1C0A4A1A1C0A4A1 /* IconMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C0A4B1B1C0A4B1B1C0A4B1 /* IconMap.swift */; };
 		F9C7975D55E337064693F594 /* AllTransactionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 133E8CFF7A458D6CF788B6C9 /* AllTransactionsView.swift */; };
 		FA264FA6CFF352BE84899CAA /* RecurringRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9757172F6554BEC226C5EBCF /* RecurringRule.swift */; };
 /* End PBXBuildFile section */
@@ -69,6 +70,7 @@
 		CB99D6D31ACA45AA0FD01E61 /* AppIconPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconPreview.swift; sourceTree = "<group>"; };
 		CF607AC3B99AC8B170C54DC0 /* FloatingAddButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingAddButton.swift; sourceTree = "<group>"; };
 		CB570002CB570002CB570002 /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
+		B1C0A4B1B1C0A4B1B1C0A4B1 /* IconMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconMap.swift; sourceTree = "<group>"; };
 		CFB6416E375E9AD8A537AD1E /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D522CF076A958B84326D5DE5 /* Trip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Trip.swift; sourceTree = "<group>"; };
 		DC9C8AA7ACC8041F99E30A1D /* PrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButton.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				E352C6064BB169EAE8A0D0F8 /* CardView.swift */,
 				CF607AC3B99AC8B170C54DC0 /* FloatingAddButton.swift */,
 				CB570002CB570002CB570002 /* CustomTabBar.swift */,
+				B1C0A4B1B1C0A4B1B1C0A4B1 /* IconMap.swift */,
 				8F2FF34D789BABE4C69E0E7F /* HapticManager.swift */,
 				DC9C8AA7ACC8041F99E30A1D /* PrimaryButton.swift */,
 				ECB6DD62A926FAB54E880700 /* TransactionRowView.swift */,
@@ -328,6 +331,7 @@
 				6ED9B5FB2957C08483E029D7 /* FinanceTrackerApp.swift in Sources */,
 				EEECD5812A7EB807770E5394 /* FloatingAddButton.swift in Sources */,
 				CB570001CB570001CB570001 /* CustomTabBar.swift in Sources */,
+				A1C0A4A1A1C0A4A1A1C0A4A1 /* IconMap.swift in Sources */,
 				CA9F049AA48DF9E2FEE36C3F /* HapticManager.swift in Sources */,
 				E441F7896C58F2FAB66F0A47 /* HomeView.swift in Sources */,
 				415E949CE8FDF22C811D59CF /* MainTabView.swift in Sources */,

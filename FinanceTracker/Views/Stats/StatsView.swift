@@ -83,6 +83,18 @@ struct StatsView: View {
         periodExpenses.reduce(0) { $0 + $1.amount }
     }
 
+    /// Slices paired with a color from the curated blue-purple palette, assigned
+    /// in amount-descending order. Drives both the donut and the legend so they
+    /// stay in sync.
+    private var coloredSlices: [ColoredSlice] {
+        slices.enumerated().map { index, slice in
+            ColoredSlice(
+                slice: slice,
+                color: AppTheme.Colors.chartPalette[index % AppTheme.Colors.chartPalette.count]
+            )
+        }
+    }
+
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -95,6 +107,14 @@ struct StatsView: View {
             }
             .background(AppTheme.Colors.background)
             .navigationTitle("Stats")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Stats")
+                        .font(.appSans(AppTheme.Typography.fontBody, weight: .semibold))
+                        .foregroundStyle(AppTheme.Colors.textPrimary)
+                }
+            }
             .safeAreaInset(edge: .bottom) {
                 // Clears the floating + button (56pt) and the tab bar.
                 Color.clear.frame(height: 100)
@@ -129,7 +149,7 @@ struct StatsView: View {
         VStack(alignment: .leading, spacing: AppTheme.Spacing.md) {
             Text("Spending")
                 .font(.appSans(AppTheme.Typography.fontLabel, weight: .semibold))
-                .foregroundStyle(AppTheme.Colors.textMuted)
+                .foregroundStyle(AppTheme.Colors.accent)
 
             if slices.isEmpty {
                 breakdownEmptyState
@@ -143,14 +163,14 @@ struct StatsView: View {
     }
 
     private var donut: some View {
-        Chart(slices) { slice in
+        Chart(coloredSlices) { item in
             SectorMark(
-                angle: .value("Amount", slice.amount),
+                angle: .value("Amount", item.slice.amount),
                 innerRadius: .ratio(0.62),
                 angularInset: 1.5
             )
             .cornerRadius(3)
-            .foregroundStyle(Color(hex: slice.category.colorHex))
+            .foregroundStyle(item.color)
         }
         .frame(height: 200)
         .chartBackground { _ in
@@ -170,17 +190,17 @@ struct StatsView: View {
 
     private var legend: some View {
         VStack(spacing: AppTheme.Spacing.sm) {
-            ForEach(slices) { slice in
-                legendRow(slice)
+            ForEach(coloredSlices) { item in
+                legendRow(item.slice, color: item.color)
             }
         }
     }
 
-    private func legendRow(_ slice: CategorySlice) -> some View {
+    private func legendRow(_ slice: CategorySlice, color: Color) -> some View {
         let percent = totalSpent > 0 ? slice.amount / totalSpent * 100 : 0
         return HStack(spacing: AppTheme.Spacing.sm) {
             Circle()
-                .fill(Color(hex: slice.category.colorHex))
+                .fill(color)
                 .frame(width: 10, height: 10)
 
             Text(slice.category.emoji)
@@ -233,7 +253,7 @@ struct StatsView: View {
             HStack {
                 Text("Budgets")
                     .font(.appSans(AppTheme.Typography.fontLabel, weight: .semibold))
-                    .foregroundStyle(AppTheme.Colors.textMuted)
+                    .foregroundStyle(AppTheme.Colors.accent)
                 Spacer()
                 Button("Manage") { showingBudgetManager = true }
                     .font(.appSans(13, weight: .semibold))
@@ -299,6 +319,13 @@ private struct CategorySlice: Identifiable {
     let category: AppCategory
     let amount: Double
     var id: String { category.id }
+}
+
+/// A slice paired with its assigned palette color (shared by donut + legend).
+private struct ColoredSlice: Identifiable {
+    let slice: CategorySlice
+    let color: Color
+    var id: String { slice.id }
 }
 
 private struct BudgetRow: Identifiable {

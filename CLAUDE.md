@@ -153,13 +153,13 @@ All models use `@Model` from SwiftData.
 
 All colors must come from `AppTheme.swift`. Never hardcode color hex values elsewhere in the codebase.
 
-**Design direction:** Ofspace-inspired — bold hero card, floating white surface cards, soft blue-purple palette, clean sans-serif hierarchy.
+**Design direction:** Professional pastel design — gradient hero card, soft pastel-tinted cards with SF Symbol icon badges, no emojis, generous whitespace.
 
 **Light mode (primary):**
-- Background: `#F0F2FA`
+- Background: `#F8F9FF`
 - Surface (cards): `#FFFFFF`
-- Accent: `#4A5DB0`
-- Accent alt: `#3A4D9F`
+- Accent: `#4B6BCC`
+- Accent alt: `#3A5AB8`
 - Income: `#2E8E6E`
 - Expense: `#B85450`
 - Danger: `#C0392B`
@@ -168,8 +168,8 @@ All colors must come from `AppTheme.swift`. Never hardcode color hex values else
 - Text dim: `#9AA0C4`
 - Border: `#E2E5F0`
 - Border alt: `#D0D4EC`
-- Hero card: `#4A5DB0` (balance card background)
-- Hero card alt: `#3A4D9F` (inner elements on the hero card)
+- Hero card: `#5567BB` (balance card background)
+- Hero card alt: `#4558AA` (inner elements on the hero card)
 
 **Dark mode:**
 - Background: `#0E0F1A`
@@ -187,6 +187,42 @@ All colors must come from `AppTheme.swift`. Never hardcode color hex values else
 **Corner radius constants:** small = 10, medium = 14, large = 20  
 **Tab bar:** 5 tabs — Home, Stats, Calendar, Plans, All  
 **Floating + button:** 56pt circle, accent color, fixed above tab bar
+
+---
+
+## Visual Language
+
+The app uses a professional pastel visual language. The data models still store an
+`emoji` field for backwards compatibility, but **emojis are never shown in the UI** —
+all iconography is SF Symbols looked up by id.
+
+- **No emojis in the UI.** All icons come from `Components/IconMap.swift`, which maps a
+  category or wallet `id` to an SF Symbol name (`IconMap.symbol(forCategory:)` /
+  `IconMap.symbol(forWallet:)`). IconMap normalizes the stored seed ids (e.g. `cat-food`,
+  `wallet-cash`) so lookups work without changing the seed ids. The emoji field stays in
+  the models but is no longer rendered.
+- **Pastel-tinted cards.** Cards use one of six pastel fills from the `PastelStyle` enum
+  (`AppTheme.swift`). A pastel is assigned to an item by its sort position with
+  `IconMap.pastel(forIndex:)`, which cycles peach → lavender → mint → sky → rose → sand.
+  Each `PastelStyle` exposes three colors: `fill` (card background tint), `badge` (the
+  circle behind the SF Symbol), and `text` (the symbol/icon and accent text). All pastels
+  have light and dark variants and resolve automatically for the current color scheme.
+- **Hero card gradient.** The balance/hero card uses `AppTheme.Colors.heroGradient` — a
+  diagonal sky-blue → brand blue-purple `LinearGradient`.
+
+**The six pastels and their purpose:**
+
+| Pastel | Role |
+|---|---|
+| Peach | Warm category (e.g. Food) accent tint |
+| Lavender | Soft purple accent for cards/badges |
+| Mint | Green/income-leaning accent tint |
+| Sky | Blue accent tint |
+| Rose | Pink accent tint |
+| Sand | Gold/warm-neutral accent tint |
+
+Pastels are assigned by index (sort order), not hardcoded per category, so any list of
+items gets a varied, balanced spread of tints.
 
 ---
 

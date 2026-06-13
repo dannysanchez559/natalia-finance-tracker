@@ -51,7 +51,13 @@ struct SettingsView: View {
             .scrollContentBackground(.hidden)
             .background(AppTheme.Colors.background)
             .navigationTitle("Settings")
+            .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Settings")
+                        .font(.appSans(AppTheme.Typography.fontBody, weight: .semibold))
+                        .foregroundStyle(AppTheme.Colors.textPrimary)
+                }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Done") { dismiss() }
                         .font(.appSans(AppTheme.Typography.fontBody, weight: .semibold))

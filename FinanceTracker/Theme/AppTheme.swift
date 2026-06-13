@@ -51,10 +51,10 @@ enum AppTheme {
     // MARK: Colors
     // Light values from CLAUDE.md; dark values are the warm-brown adaptation per PRD §5.1.
     enum Colors {
-        static let background  = Color(light: "#F0F2FA", dark: "#0E0F1A")
+        static let background  = Color(light: "#FAFBFF", dark: "#0E0F1A")
         static let surface     = Color(light: "#FFFFFF", dark: "#161828")
-        static let accent      = Color(light: "#4A5DB0", dark: "#7B8FD4")
-        static let accentAlt   = Color(light: "#3A4D9F", dark: "#6A7EC4")
+        static let accent      = Color(light: "#4B6BCC", dark: "#7B8FD4")
+        static let accentAlt   = Color(light: "#3A5AB8", dark: "#6A7EC4")
         static let income      = Color(light: "#2E8E6E", dark: "#5AAAC8")
         static let expense     = Color(light: "#B85450", dark: "#D47878")
         static let danger      = Color(light: "#C0392B", dark: "#E0564A")
@@ -64,12 +64,62 @@ enum AppTheme {
         static let border      = Color(light: "#E2E5F0", dark: "#2A2D45")
         static let borderAlt   = Color(light: "#D0D4EC", dark: "#363A58")
         // Hero balance card — bold brand blue-purple with white text in both modes.
-        static let heroCard    = Color(light: "#4A5DB0", dark: "#4A5DB0")
-        static let heroCardAlt = Color(light: "#3A4D9F", dark: "#3A4D9F")
+        static let heroCard    = Color(light: "#5567BB", dark: "#4A5DB0")
+        static let heroCardAlt = Color(light: "#4558AA", dark: "#3A4D9F")
         // Accent used for the active-trip banner.
         static let teal        = Color(light: "#2A7A9B", dark: "#5FBEB6")
         // Budget alert at 80–99% of limit (100%+ uses `expense`).
         static let warning     = Color(light: "#E0924A", dark: "#E0A24E")
+
+        // Curated blue-purple palette for chart slices, in order for up to 8
+        // categories (sorted by amount descending). Same in both modes.
+        static let chartPalette: [Color] = [
+            Color(hex: "#4A5DB0"), Color(hex: "#7B8FD4"), Color(hex: "#A78FD4"),
+            Color(hex: "#D4A8D4"), Color(hex: "#5AAAC8"), Color(hex: "#7BC4B0"),
+            Color(hex: "#B0C47B"), Color(hex: "#D4B87B"),
+        ]
+
+        // MARK: Pastel Palette
+        // Soft tinted card system. Each pastel has three roles:
+        //   fill  — the card background tint
+        //   badge — the icon circle behind an SF Symbol
+        //   text  — the symbol/icon and accent text color
+        // Assigned to items via `PastelStyle` and `IconMap.pastel(forIndex:)`.
+        // Dark values are muted (~20% brightness) versions of the same hue,
+        // with a slightly lighter badge and a light, readable text color.
+
+        static let pastelPeachFill  = Color(light: "#FDEEE6", dark: "#33271F")
+        static let pastelPeachBadge = Color(light: "#F5D5C4", dark: "#5C4636")
+        static let pastelPeachText  = Color(light: "#B5603A", dark: "#E8B89C")
+
+        static let pastelLavenderFill  = Color(light: "#EDEAFB", dark: "#262338")
+        static let pastelLavenderBadge = Color(light: "#D5CEF3", dark: "#423C66")
+        static let pastelLavenderText  = Color(light: "#5A4D9F", dark: "#C4BCF0")
+
+        static let pastelMintFill  = Color(light: "#E3F4EC", dark: "#1E322A")
+        static let pastelMintBadge = Color(light: "#C2E6D3", dark: "#335248")
+        static let pastelMintText  = Color(light: "#2E8E6E", dark: "#9FD9BE")
+
+        static let pastelSkyFill  = Color(light: "#E5F0FC", dark: "#1F2C3A")
+        static let pastelSkyBadge = Color(light: "#C2DCF5", dark: "#38516B")
+        static let pastelSkyText  = Color(light: "#3A6BB5", dark: "#A6CBEF")
+
+        static let pastelRoseFill  = Color(light: "#FBEAF1", dark: "#33232C")
+        static let pastelRoseBadge = Color(light: "#F3CADE", dark: "#5C3E4E")
+        static let pastelRoseText  = Color(light: "#B54B7E", dark: "#E8AAC8")
+
+        static let pastelSandFill  = Color(light: "#FCF3E0", dark: "#322C1C")
+        static let pastelSandBadge = Color(light: "#F5E2B8", dark: "#564B2E")
+        static let pastelSandText  = Color(light: "#A87A1E", dark: "#DEC68A")
+
+        // Gradient for the hero balance card — bright sky blue into brand blue-purple.
+        static var heroGradient: LinearGradient {
+            LinearGradient(
+                colors: [Color(hex: "#8FB4F0"), Color(hex: "#5567BB")],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+        }
     }
 
     // MARK: Corner Radius
@@ -132,7 +182,7 @@ struct CardStyle: ViewModifier {
             .background(AppTheme.Colors.surface)
             .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.large, style: .continuous))
             // Soft floating shadow (Ofspace-inspired) — no border.
-            .shadow(color: .black.opacity(0.06), radius: 12, x: 0, y: 4)
+            .shadow(color: .black.opacity(0.08), radius: 16, x: 0, y: 6)
     }
 }
 
@@ -140,5 +190,51 @@ extension View {
     /// Applies the standard surface card treatment (background, radius, soft shadow).
     func cardStyle(padding: CGFloat = AppTheme.Spacing.md) -> some View {
         modifier(CardStyle(padding: padding))
+    }
+}
+
+// MARK: - Pastel Style
+
+/// One of the six pastel card themes. Each case exposes the `fill`, `badge`, and
+/// `text` colors for that pastel. The colors are `Color(light:dark:)` values, so
+/// they resolve automatically for the current color scheme — no scheme needs to
+/// be passed in. Assign one to an item with `IconMap.pastel(forIndex:)`.
+enum PastelStyle: CaseIterable {
+    case peach, lavender, mint, sky, rose, sand
+
+    /// Soft card-background tint.
+    var fill: Color {
+        switch self {
+        case .peach:    return AppTheme.Colors.pastelPeachFill
+        case .lavender: return AppTheme.Colors.pastelLavenderFill
+        case .mint:     return AppTheme.Colors.pastelMintFill
+        case .sky:      return AppTheme.Colors.pastelSkyFill
+        case .rose:     return AppTheme.Colors.pastelRoseFill
+        case .sand:     return AppTheme.Colors.pastelSandFill
+        }
+    }
+
+    /// Circular badge color behind the SF Symbol icon.
+    var badge: Color {
+        switch self {
+        case .peach:    return AppTheme.Colors.pastelPeachBadge
+        case .lavender: return AppTheme.Colors.pastelLavenderBadge
+        case .mint:     return AppTheme.Colors.pastelMintBadge
+        case .sky:      return AppTheme.Colors.pastelSkyBadge
+        case .rose:     return AppTheme.Colors.pastelRoseBadge
+        case .sand:     return AppTheme.Colors.pastelSandBadge
+        }
+    }
+
+    /// Symbol/icon and accent-text color.
+    var text: Color {
+        switch self {
+        case .peach:    return AppTheme.Colors.pastelPeachText
+        case .lavender: return AppTheme.Colors.pastelLavenderText
+        case .mint:     return AppTheme.Colors.pastelMintText
+        case .sky:      return AppTheme.Colors.pastelSkyText
+        case .rose:     return AppTheme.Colors.pastelRoseText
+        case .sand:     return AppTheme.Colors.pastelSandText
+        }
     }
 }

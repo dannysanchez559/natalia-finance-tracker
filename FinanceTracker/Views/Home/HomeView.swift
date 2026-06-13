@@ -224,7 +224,7 @@ struct HomeView: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(10)
-        .background(Color.white.opacity(0.15))
+        .background(Color.white.opacity(0.20))
         .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.medium, style: .continuous))
     }
 
@@ -273,25 +273,35 @@ struct HomeView: View {
         return Button {
             // TODO: Phase 4 — present edit/delete sheet for this wallet.
         } label: {
-            VStack(spacing: AppTheme.Spacing.sm) {
-                ZStack {
-                    Circle()
-                        .fill(Color(hex: wallet.colorHex).opacity(0.2))
-                    Text(wallet.emoji)
-                        .font(.system(size: 22))
+            VStack(spacing: 0) {
+                // Full-width colored bar at the very top (clipped to the
+                // card's top corners by the outer rounded clip shape).
+                Rectangle()
+                    .fill(Color(hex: wallet.colorHex))
+                    .frame(height: 4)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(wallet.name)
+                        .font(.appSans(AppTheme.Typography.fontCaption, weight: .medium))
+                        .foregroundStyle(AppTheme.Colors.textMuted)
+                        .lineLimit(1)
+                    Text(store.formatAmount(balance))
+                        .font(.appSans(AppTheme.Typography.fontCardNumber, weight: .semibold))
+                        .foregroundStyle(AppTheme.Colors.textPrimary)
+                        .lineLimit(1)
+                    Spacer(minLength: 0)
                 }
-                .frame(width: 56, height: 56)
-
-                Text(wallet.name)
-                    .font(.appSans(AppTheme.Typography.fontCaption, weight: .medium))
-                    .foregroundStyle(AppTheme.Colors.textMuted)
-                    .lineLimit(1)
-
-                Text(store.formatAmount(balance))
-                    .font(.appSans(AppTheme.Typography.fontLabel, weight: .semibold))
-                    .foregroundStyle(AppTheme.Colors.textPrimary)
-                    .lineLimit(1)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                .overlay(alignment: .bottomTrailing) {
+                    Text(wallet.emoji)
+                        .font(.system(size: 20))
+                }
+                .padding(12)
             }
+            .frame(width: 140, height: 90)
+            .background(AppTheme.Colors.surface)
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .shadow(color: .black.opacity(0.08), radius: 16, x: 0, y: 6)
         }
         .buttonStyle(.plain)
     }
@@ -329,49 +339,54 @@ struct HomeView: View {
                 .foregroundStyle(AppTheme.Colors.accent)
             }
 
-            budgetCard
-        }
-    }
-
-    private var budgetCard: some View {
-        VStack(spacing: 0) {
             if budgetItems.isEmpty {
-                Text("Tap Manage to set spending limits")
-                    .font(.appSans(AppTheme.Typography.fontLabel, weight: .medium))
-                    .foregroundStyle(AppTheme.Colors.textMuted)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.vertical, AppTheme.Spacing.sm)
+                budgetEmptyState
             } else {
-                ForEach(Array(budgetItems.enumerated()), id: \.element.id) { index, item in
-                    budgetRow(item)
-                    if index < budgetItems.count - 1 {
-                        Divider()
+                LazyVGrid(columns: budgetColumns, spacing: AppTheme.Spacing.md) {
+                    ForEach(budgetItems) { item in
+                        budgetCard(item)
                     }
                 }
             }
         }
-        .cardStyle()
     }
 
-    private func budgetRow(_ item: BudgetItem) -> some View {
+    private var budgetColumns: [GridItem] {
+        [GridItem(.flexible(), spacing: AppTheme.Spacing.md),
+         GridItem(.flexible(), spacing: AppTheme.Spacing.md)]
+    }
+
+    private var budgetEmptyState: some View {
+        Text("Tap Manage to set spending limits")
+            .font(.appSans(AppTheme.Typography.fontLabel, weight: .medium))
+            .foregroundStyle(AppTheme.Colors.textMuted)
+            .frame(maxWidth: .infinity, alignment: .center)
+            .padding(.vertical, AppTheme.Spacing.sm)
+            .cardStyle()
+    }
+
+    private func budgetCard(_ item: BudgetItem) -> some View {
         let fillColor: Color = {
             if item.ratio >= 1 { return AppTheme.Colors.expense }
             if item.ratio >= 0.8 { return AppTheme.Colors.warning }
             return AppTheme.Colors.accent
         }()
 
-        return VStack(spacing: AppTheme.Spacing.sm) {
-            HStack(spacing: AppTheme.Spacing.sm) {
-                Text(item.category.emoji)
-                    .font(.system(size: 18))
-                Text(item.category.label)
-                    .font(.appSans(AppTheme.Typography.fontBody, weight: .medium))
-                    .foregroundStyle(AppTheme.Colors.textPrimary)
-                Spacer()
-                Text("\(store.formatAmount(item.spent)) / \(store.formatAmount(item.limit))")
-                    .font(.appSans(AppTheme.Typography.fontLabel, weight: .medium))
-                    .foregroundStyle(AppTheme.Colors.textMuted)
-            }
+        return VStack(alignment: .leading, spacing: 4) {
+            Text(item.category.emoji)
+                .font(.system(size: 28))
+            Text(item.category.label)
+                .font(.appSans(AppTheme.Typography.fontLabel, weight: .semibold))
+                .foregroundStyle(AppTheme.Colors.textPrimary)
+                .lineLimit(1)
+            Text(store.formatAmount(item.spent))
+                .font(.appSans(AppTheme.Typography.fontLabel, weight: .semibold))
+                .foregroundStyle(AppTheme.Colors.accent)
+            Text(store.formatAmount(item.limit))
+                .font(.appSans(AppTheme.Typography.fontCaption, weight: .medium))
+                .foregroundStyle(AppTheme.Colors.textMuted)
+
+            Spacer(minLength: 0)
 
             GeometryReader { geo in
                 ZStack(alignment: .leading) {
@@ -382,9 +397,15 @@ struct HomeView: View {
                         .frame(width: geo.size.width * min(item.ratio, 1))
                 }
             }
-            .frame(height: 5)
+            .frame(height: 4)
         }
-        .padding(.vertical, AppTheme.Spacing.sm)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(14)
+        .frame(height: 110)
+        // Matches CardStyle surface/radius/shadow, with an enforced fixed height.
+        .background(AppTheme.Colors.surface)
+        .clipShape(RoundedRectangle(cornerRadius: AppTheme.Radius.large, style: .continuous))
+        .shadow(color: .black.opacity(0.08), radius: 16, x: 0, y: 6)
     }
 
     // MARK: - Recent Transactions
@@ -420,13 +441,17 @@ struct HomeView: View {
     private func dayGroup(_ group: DayGroup) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             Text(group.label)
-                .font(.appSans(13, weight: .semibold))
+                .font(.appSans(AppTheme.Typography.fontLabel, weight: .semibold))
                 .foregroundStyle(AppTheme.Colors.textPrimary)
-                .padding(.vertical, AppTheme.Spacing.sm)
+                .padding(.bottom, AppTheme.Spacing.md)
 
-            VStack(spacing: AppTheme.Spacing.xs) {
-                ForEach(group.transactions) { tx in
+            VStack(spacing: 0) {
+                ForEach(Array(group.transactions.enumerated()), id: \.element.id) { index, tx in
                     recentRow(tx)
+                    if index < group.transactions.count - 1 {
+                        Divider()
+                            .overlay(AppTheme.Colors.borderAlt)
+                    }
                 }
             }
             .cardStyle()
@@ -452,14 +477,8 @@ struct HomeView: View {
             .buttonStyle(.plain)
             .disabled(quickActions.count >= 6)
             .opacity(quickActions.count >= 6 ? 0.3 : 1)
-
-            Button { delete(tx) } label: {
-                Image(systemName: "trash")
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundStyle(AppTheme.Colors.expense)
-            }
-            .buttonStyle(.plain)
         }
+        .padding(.vertical, 2)
     }
 
     private var emptyState: some View {
@@ -530,7 +549,7 @@ struct HomeView: View {
     ) -> some View {
         HStack {
             Text(title)
-                .font(.appSans(AppTheme.Typography.fontBody, weight: .semibold))
+                .font(.appSans(17, weight: .semibold))
                 .foregroundStyle(AppTheme.Colors.textPrimary)
             Spacer()
             trailing()
